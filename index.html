@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
-  <title>NEXUS V12 — Precision Engine</title>
+  <title>NEXUS V13 — Precision Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,235 +28,117 @@
       background-image:
         radial-gradient(circle at 12% 35%, rgba(181,55,242,0.1), transparent 30%),
         radial-gradient(circle at 88% 15%, rgba(0,229,255,0.08), transparent 28%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      overflow-x: hidden;
+      color: var(--text); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden;
     }
     .app { width: 100%; max-width: 480px; min-height: 100vh; position: relative; z-index: 1; padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
 
-    /* Splash */
+    /* ===== SPLASH (roket + logo menyala) ===== */
     #splash {
       position: fixed; inset: 0; z-index: 9999; background: #03050a;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      transition: opacity 0.55s ease, visibility 0.55s;
-      overflow: hidden;
+      transition: opacity 0.55s ease, visibility 0.55s; overflow: hidden;
     }
     #splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
     .splash-rocket {
       font-size: 36px; margin-bottom: 18px;
-      animation: rocketLaunch 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation: rocketLaunch 1.6s cubic-bezier(0.2,0.8,0.2,1) forwards;
       filter: drop-shadow(0 0 12px rgba(0,229,255,0.55));
     }
     @keyframes rocketLaunch {
       0%   { transform: translateY(40px) scale(0.6); opacity: 0; }
       35%  { transform: translateY(0) scale(1); opacity: 1; }
-      70%  { transform: translateY(-8px) scale(1.05); opacity: 1; }
+      70%  { transform: translateY(-8px) scale(1.05); }
       100% { transform: translateY(-18px) scale(1); opacity: 0.95; }
     }
     .splash-logo {
-      font-size: 46px; font-weight: 800; letter-spacing: 8px;
-      position: relative; color: transparent;
-      background: linear-gradient(90deg,
-        rgba(255,255,255,0.12) 0%,
-        rgba(255,255,255,0.12) 100%);
+      font-size: 46px; font-weight: 800; letter-spacing: 8px; position: relative; color: transparent;
+      background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.12));
       -webkit-background-clip: text; background-clip: text;
     }
     .splash-logo::after {
-      content: "NEXUS";
-      position: absolute; left: 0; top: 0; width: 0; overflow: hidden;
-      white-space: nowrap;
+      content: "NEXUS"; position: absolute; left: 0; top: 0; width: 0; overflow: hidden; white-space: nowrap;
       background: linear-gradient(90deg, var(--cyan), #7c5cff, var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       filter: drop-shadow(0 0 14px rgba(0,229,255,0.55));
-      animation: nexusShine 1.5s 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: nexusShine 1.5s 0.25s cubic-bezier(0.22,1,0.36,1) forwards;
     }
-    @keyframes nexusShine {
-      0%   { width: 0; }
-      100% { width: 100%; }
-    }
-    .splash-sub {
-      margin-top: 10px; font-size: 11px; color: var(--muted);
-      letter-spacing: 3px; text-transform: uppercase;
-      opacity: 0; animation: fadeUp 0.5s 1.1s forwards;
-    }
-    .splash-bar {
-      width: 140px; height: 3px; background: rgba(255,255,255,0.08);
-      border-radius: 4px; margin-top: 28px; overflow: hidden;
-    }
-    .splash-bar > i {
-      display: block; height: 100%; width: 0;
-      background: linear-gradient(90deg, var(--cyan), var(--purple));
-      animation: barFill 1.4s 0.35s forwards;
-      box-shadow: 0 0 12px rgba(0,229,255,0.5);
-    }
+    @keyframes nexusShine { to { width: 100%; } }
+    .splash-sub { margin-top: 10px; font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; opacity: 0; animation: fadeUp 0.5s 1.1s forwards; }
+    .splash-bar { width: 140px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 4px; margin-top: 28px; overflow: hidden; }
+    .splash-bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--purple)); animation: barFill 1.4s 0.35s forwards; box-shadow: 0 0 12px rgba(0,229,255,0.5); }
     @keyframes barFill { to { width: 100%; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-    /* Result tabs (Stockbot-style) */
-    .res-tabs {
-      display: flex; gap: 4px; background: rgba(0,0,0,0.35);
-      border-radius: 12px; padding: 4px; margin-bottom: 12px; overflow-x: auto;
-    }
-    .res-tab {
-      flex: 1; min-width: 72px; text-align: center; padding: 10px 6px;
-      border-radius: 10px; font-size: 10px; font-weight: 800; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.4px; border: 1px solid transparent;
-    }
-    .res-tab.active {
-      background: rgba(0,229,255,0.12); color: var(--cyan);
-      border-color: rgba(0,229,255,0.28);
-    }
-    .res-panel { display: none; }
-    .res-panel.active { display: block; animation: fadeUp 0.25s ease; }
-    .score-ring-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-    .score-ring {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: conic-gradient(var(--cyan) calc(var(--pct) * 1%), rgba(255,255,255,0.08) 0);
-      display: flex; align-items: center; justify-content: center; position: relative;
-    }
-    .score-ring::after {
-      content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #0a0e18;
-    }
-    .score-ring b {
-      position: relative; z-index: 1; font-size: 20px; font-family: 'JetBrains Mono', monospace; font-weight: 800;
-    }
-    .sr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 10px 0; }
-    .sr-cell {
-      background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px; padding: 10px 8px; text-align: center;
-    }
-    .sr-cell span { display: block; font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
-    .sr-cell b { font-size: 14px; font-family: 'JetBrains Mono', monospace; }
-    .plan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .plan-cell {
-      background: rgba(0,0,0,0.28); border-radius: 12px; padding: 11px 10px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .plan-cell span { display: block; font-size: 9px; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .plan-cell b { font-size: 14px; font-family: 'JetBrains Mono', monospace; }
-    .plan-cell.tp b { color: var(--green); }
-    .plan-cell.sl b { color: var(--red); }
-    .plan-cell.entry b { color: var(--cyan); }
-    .breakdown-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 7px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 12px;
-    }
-    .breakdown-row:last-child { border-bottom: none; }
-    .breakdown-row .bar {
-      flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px;
-      margin: 0 10px; overflow: hidden;
-    }
-    .breakdown-row .bar > i {
-      display: block; height: 100%; border-radius: 4px;
-      background: linear-gradient(90deg, var(--cyan), var(--purple));
-    }
-    .confirm-list { font-size: 12px; line-height: 1.7; color: #cbd5e1; }
-    .confirm-list .ok { color: var(--green); }
-    .confirm-list .no { color: var(--red); }
-
-    /* Auth */
+    /* ===== AUTH ===== */
     #authView { display: none; padding: 40px 18px 30px; animation: fadeUp 0.4s ease; }
     #authView.show { display: block; }
     .auth-brand { text-align: center; margin-bottom: 28px; }
-    .auth-brand h1 {
-      font-size: 28px; font-weight: 800; letter-spacing: 4px;
-      background: linear-gradient(120deg, var(--cyan), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    .auth-brand h1 { font-size: 28px; font-weight: 800; letter-spacing: 4px; background: linear-gradient(120deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .auth-brand p { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .auth-card {
-      background: var(--card); backdrop-filter: blur(20px);
-      border: 1px solid var(--border); border-radius: 20px; padding: 22px;
-    }
+    .auth-card { background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 22px; }
     .auth-tabs { display: flex; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 4px; margin-bottom: 18px; }
-    .auth-tab {
-      flex: 1; text-align: center; padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 800;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;
-    }
+    .auth-tab { flex: 1; text-align: center; padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
     .auth-tab.active { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); }
     .field { margin-bottom: 13px; }
     .field label { display: block; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
-    .field input {
-      width: 100%; padding: 14px 15px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(0,0,0,0.35); color: #fff; font-size: 14px; outline: none;
-      font-family: 'JetBrains Mono', monospace;
-    }
+    .field input { width: 100%; padding: 14px 15px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.07); background: rgba(0,0,0,0.35); color: #fff; font-size: 14px; outline: none; font-family: 'JetBrains Mono', monospace; }
     .field input:focus { border-color: rgba(0,229,255,0.45); }
     .auth-msg { display: none; font-size: 12px; padding: 10px 13px; border-radius: 11px; margin-bottom: 12px; line-height: 1.4; }
     .auth-msg.err { display: block; background: rgba(255,42,95,0.12); border: 1px solid rgba(255,42,95,0.3); color: #ff8aa8; }
-    .auth-msg.ok { display: block; background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,157,0.28); color: #7dffen; }
-    .btn-main {
-      width: 100%; padding: 14px; border: none; border-radius: 13px; font-weight: 800; font-size: 13px;
-      letter-spacing: 1px; text-transform: uppercase; color: #001018;
-      background: linear-gradient(135deg, var(--cyan), #6d5efc);
-    }
+    .auth-msg.ok { display: block; background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,157,0.28); color: #7dffc4; }
+    .btn-main { width: 100%; padding: 14px; border: none; border-radius: 13px; font-weight: 800; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #001018; background: linear-gradient(135deg, var(--cyan), #6d5efc); }
     .btn-main:disabled { opacity: 0.55; }
     .disclaimer { font-size: 10px; color: #64748b; text-align: center; line-height: 1.45; margin-top: 16px; }
 
-    /* App shell */
+    /* ===== SHELL ===== */
     #appView { display: none; }
     #appView.show { display: block; }
     .view { display: none; padding: 16px 14px 10px; animation: fadeUp 0.3s ease; }
     .view.active { display: block; }
-
-    .glass {
-      background: var(--card); backdrop-filter: blur(18px);
-      border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px;
-    }
-    .section-label {
-      font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1.1px;
-      text-transform: uppercase; margin-bottom: 11px; display: flex; align-items: center; gap: 7px;
-    }
+    .glass { background: var(--card); backdrop-filter: blur(18px); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+    .section-label { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1.1px; text-transform: uppercase; margin-bottom: 11px; display: flex; align-items: center; gap: 7px; }
     .grad { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
     .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .avatar {
-      width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 15px; border: 1px solid rgba(181,55,242,0.4);
-      background: linear-gradient(135deg, rgba(181,55,242,0.25), transparent);
-    }
-    .quota-pill {
-      font-size: 11px; font-weight: 700; color: var(--cyan);
-      background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25);
-      padding: 6px 11px; border-radius: 20px;
-    }
+    .avatar { width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; border: 1px solid rgba(181,55,242,0.4); background: linear-gradient(135deg, rgba(181,55,242,0.25), transparent); }
+    .quota-pill { font-size: 11px; font-weight: 700; color: var(--cyan); background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); padding: 6px 11px; border-radius: 20px; }
 
-    .search-box {
-      display: flex; gap: 8px; background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 5px; margin-bottom: 12px;
-    }
-    .search-box input {
-      flex: 1; background: transparent; border: none; color: #fff; padding: 10px 12px; outline: none;
-      font-family: 'JetBrains Mono', monospace; font-size: 14px; text-transform: uppercase;
-    }
-    .search-box button {
-      width: 42px; height: 42px; border: none; border-radius: 11px; background: var(--cyan); color: #001018; font-weight: 800;
-    }
+    .search-box { display: flex; gap: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 5px; margin-bottom: 12px; }
+    .search-box input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px 12px; outline: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; text-transform: uppercase; }
+    .search-box button { width: 42px; height: 42px; border: none; border-radius: 11px; background: var(--cyan); color: #001018; font-weight: 800; }
 
     .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 12px; }
     .metric { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 13px; padding: 11px 13px; }
     .metric span { display: block; font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3px; }
     .metric b { font-size: 16px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
 
-    .btn-ghost {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,229,255,0.25);
-      background: rgba(0,229,255,0.08); color: var(--cyan); font-weight: 800; font-size: 12px;
-      letter-spacing: 0.7px; text-transform: uppercase;
-    }
+    .btn-ghost { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,229,255,0.25); background: rgba(0,229,255,0.08); color: var(--cyan); font-weight: 800; font-size: 12px; letter-spacing: 0.7px; text-transform: uppercase; }
     .btn-ghost:disabled { opacity: 0.5; }
     .btn-ghost.yellow { border-color: rgba(255,183,3,0.35); color: var(--yellow); background: rgba(255,183,3,0.1); }
     .btn-ghost.purple { border-color: rgba(181,55,242,0.35); color: var(--purple); background: rgba(181,55,242,0.1); }
     .btn-ghost.red { border-color: rgba(255,42,95,0.35); color: var(--red); background: rgba(255,42,95,0.08); }
+    .btn-ghost.green { border-color: rgba(0,255,157,0.3); color: var(--green); background: rgba(0,255,157,0.08); }
+    .btn-sm { width: auto; padding: 8px 12px; font-size: 11px; }
 
-    /* Cards */
-    .radar-card, .bandar-card {
-      background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 15px; padding: 13px; margin-bottom: 9px; cursor: pointer; transition: 0.2s;
-    }
+    /* ===== CHART ===== */
+    .chart-host { border-radius: 14px; overflow: hidden; background: #070b14; position: relative; }
+    #ihsgChart { height: 210px; }
+    #chartBox { height: 300px; }
+    .chart-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 10px; color: var(--muted); margin-top: 9px; }
+    .chart-legend i { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 4px; }
+    .tf-row { display: flex; gap: 6px; margin-bottom: 9px; }
+    .tf-btn { flex: 1; padding: 7px 4px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.09); background: rgba(0,0,0,0.3); color: var(--muted); font-size: 10.5px; font-weight: 800; }
+    .tf-btn.active { border-color: rgba(0,229,255,0.4); color: var(--cyan); background: rgba(0,229,255,0.1); }
+
+    /* ===== CARDS ===== */
+    .radar-card, .bandar-card { background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.06); border-radius: 15px; padding: 13px; margin-bottom: 9px; cursor: pointer; transition: 0.2s; }
     .radar-card:active, .bandar-card:active { transform: scale(0.98); border-color: rgba(0,229,255,0.3); }
+    .radar-card.buy { border-left: 3px solid var(--green); }
+    .radar-card.wait { border-left: 3px solid var(--yellow); }
+    .radar-card.avoid { border-left: 3px solid rgba(255,42,95,0.5); opacity: 0.75; }
+    .bandar-card.buy { border-left: 3px solid var(--green); }
+    .bandar-card.wait { border-left: 3px solid var(--yellow); }
+    .bandar-card.avoid { border-left: 3px solid rgba(255,42,95,0.5); }
     .radar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
     .ticker { font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
     .badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 7px; letter-spacing: 0.4px; }
@@ -265,113 +147,170 @@
     .badge-B { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.28); }
     .badge-C { background: rgba(255,183,3,0.12); color: var(--yellow); border: 1px solid rgba(255,183,3,0.28); }
     .badge-D { background: rgba(255,42,95,0.12); color: var(--red); border: 1px solid rgba(255,42,95,0.28); }
-    .setup-tag {
-      display: inline-block; font-size: 10px; font-weight: 700; color: var(--purple);
-      background: rgba(181,55,242,0.12); border: 1px solid rgba(181,55,242,0.25);
-      padding: 3px 8px; border-radius: 6px; margin-bottom: 7px;
-    }
-    .bandar-tag {
-      display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; margin-bottom: 7px;
-    }
+    .setup-tag { display: inline-block; font-size: 10px; font-weight: 700; color: var(--purple); background: rgba(181,55,242,0.12); border: 1px solid rgba(181,55,242,0.25); padding: 3px 8px; border-radius: 6px; }
+    .bandar-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
     .bandar-tag.acc { color: var(--green); background: rgba(0,255,157,0.12); border: 1px solid rgba(0,255,157,0.28); }
     .bandar-tag.dist { color: var(--red); background: rgba(255,42,95,0.12); border: 1px solid rgba(255,42,95,0.28); }
     .bandar-tag.unknown { color: var(--muted); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
     .meta { display: flex; gap: 11px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
     .meta b { color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
+    .tagrow { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 7px; }
 
-    /* Result */
+    /* ===== STATUS ENTRY ===== */
+    .status-card { border-radius: 16px; padding: 15px; margin-bottom: 14px; border: 1px solid; }
+    .status-card.buy { background: linear-gradient(135deg, rgba(0,255,157,0.14), rgba(0,255,157,0.03)); border-color: rgba(0,255,157,0.35); }
+    .status-card.wait { background: linear-gradient(135deg, rgba(255,183,3,0.13), rgba(255,183,3,0.03)); border-color: rgba(255,183,3,0.33); }
+    .status-card.avoid { background: linear-gradient(135deg, rgba(255,42,95,0.13), rgba(255,42,95,0.03)); border-color: rgba(255,42,95,0.33); }
+    .status-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; }
+    .status-card.buy .status-dot { background: var(--green); }
+    .status-card.wait .status-dot { background: var(--yellow); }
+    .status-card.avoid .status-dot { background: var(--red); }
+    .status-title { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
+    .status-card.buy .status-title { color: var(--green); }
+    .status-card.wait .status-title { color: var(--yellow); }
+    .status-card.avoid .status-title { color: var(--red); }
+    .status-reason { font-size: 13px; line-height: 1.55; color: #dbe4f0; }
+    .status-pos { display: inline-block; margin-top: 10px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; padding: 4px 10px; border-radius: 8px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.09); }
+    .trig-box { background: rgba(0,0,0,0.32); border-radius: 12px; padding: 11px 13px; margin-top: 10px; border-left: 3px solid var(--cyan); }
+    .trig-box.invalid { border-left-color: var(--red); }
+    .trig-box .t { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .trig-box .v { font-size: 12.5px; line-height: 1.5; color: #e6ecf5; }
+
+    /* ===== TAB HASIL ===== */
+    .res-tabs { display: flex; gap: 5px; background: rgba(0,0,0,0.35); border-radius: 13px; padding: 4px; margin-bottom: 13px; overflow-x: auto; }
+    .res-tab { flex: 1; min-width: 62px; text-align: center; padding: 9px 6px; border-radius: 10px; font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; }
+    .res-tab.active { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.28); }
+    .res-panel { display: none; animation: fadeUp 0.25s ease; }
+    .res-panel.active { display: block; }
+
+    /* ===== S/R GRID ===== */
+    .sr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+    .sr-cell { background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 8px; text-align: center; }
+    .sr-cell span { display: block; font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .sr-cell b { font-size: 14px; font-family: 'JetBrains Mono', monospace; }
+    .sr-cell.sup b { color: var(--green); }
+    .sr-cell.res b { color: #ff8aa8; }
+
+    /* ===== KONFIRMASI ===== */
+    .confirm-list { font-size: 12px; line-height: 1.85; color: #cbd5e1; font-family: 'JetBrains Mono', monospace; }
+    .confirm-list .ok { color: var(--green); }
+    .confirm-list .no { color: var(--red); }
+    .confirm-list .last { color: var(--muted); margin-top: 4px; }
+
+    /* ===== GATE ===== */
+    .gate-item { display: flex; gap: 9px; align-items: flex-start; font-size: 12px; line-height: 1.45; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+    .gate-item:last-child { border-bottom: none; }
+    .gate-code { flex-shrink: 0; font-size: 9px; font-weight: 800; font-family: 'JetBrains Mono', monospace; padding: 3px 7px; border-radius: 6px; background: rgba(255,42,95,0.13); color: #ff8aa8; border: 1px solid rgba(255,42,95,0.25); }
+    .gate-code.soft { background: rgba(255,183,3,0.12); color: var(--yellow); border-color: rgba(255,183,3,0.28); }
+    .gate-code.clear { background: rgba(0,255,157,0.12); color: var(--green); border-color: rgba(0,255,157,0.28); }
+    .gate-text { color: #cbd5e1; }
+
+    /* ===== ANALISA ===== */
+    .ana-block { margin-bottom: 12px; }
+    .ana-block h4 { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--cyan); margin-bottom: 5px; }
+    .ana-block p { font-size: 12.5px; line-height: 1.62; color: #d7e0ee; white-space: pre-wrap; }
+
     .score-big { font-size: 34px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1; }
     .plan-box { background: rgba(0,0,0,0.3); border-radius: 13px; padding: 13px; margin-bottom: 9px; border-left: 3px solid var(--cyan); }
     .plan-box.sl { border-left-color: var(--red); }
     .plan-box.tp { border-left-color: var(--green); }
     .plan-title { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
     .plan-val { font-size: 17px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    .plan-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
-    .status-pill { display: inline-block; font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 20px; margin-bottom: 11px; }
-    .status-now { background: rgba(0,255,157,0.12); color: var(--green); border: 1px solid rgba(0,255,157,0.3); }
-    .status-wait { background: rgba(255,183,3,0.12); color: var(--yellow); border: 1px solid rgba(255,183,3,0.3); }
-    .status-no { background: rgba(255,42,95,0.12); color: var(--red); border: 1px solid rgba(255,42,95,0.3); }
-    .warning-box {
-      background: rgba(255,42,95,0.1); border: 1px solid rgba(255,42,95,0.3); border-radius: 12px;
-      padding: 11px 13px; font-size: 12px; color: #ff8aa8; margin-bottom: 12px; line-height: 1.45;
-    }
-    .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 12px; }
+    .plan-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+    .info-box { background: rgba(255,183,3,0.09); border: 1px solid rgba(255,183,3,0.25); border-radius: 12px; padding: 10px 12px; font-size: 11.5px; color: #ffd166; margin-bottom: 12px; line-height: 1.45; }
+    .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 12px; gap: 10px; }
     .row:last-child { border-bottom: none; }
     .row span { color: var(--muted); }
-    .row b { font-family: 'JetBrains Mono', monospace; }
+    .row b { font-family: 'JetBrains Mono', monospace; text-align: right; }
+
+    .bd { display: flex; align-items: center; gap: 9px; padding: 7px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 11.5px; }
+    .bd:last-child { border-bottom: none; }
+    .bd-name { flex: 1; color: #cbd5e1; font-weight: 600; }
+    .bd-bar { width: 78px; height: 6px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .bd-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+    .bd-val { width: 46px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #e2e8f0; }
 
     .risk-row { display: flex; gap: 7px; margin: 9px 0 6px; }
-    .risk-btn {
-      flex: 1; padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.3); color: var(--muted); font-size: 11px; font-weight: 800;
-    }
+    .risk-btn { flex: 1; padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: var(--muted); font-size: 11px; font-weight: 800; }
     .risk-btn.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,183,3,0.12); }
 
-    /* Chat */
-    .chat-wrap { display: flex; flex-direction: column; height: calc(100vh - 160px); min-height: 400px; }
+    .prog { height: 6px; border-radius: 4px; background: rgba(255,255,255,0.07); overflow: hidden; margin: 9px 0 6px; }
+    .prog > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 0.4s; }
+
+    /* ===== CHAT ===== */
+    .chat-wrap { display: flex; flex-direction: column; height: calc(100vh - 190px); min-height: 380px; }
     .chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; padding-bottom: 8px; }
     .bubble { max-width: 88%; padding: 11px 13px; border-radius: 13px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
     .bubble.user { align-self: flex-end; background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.22); }
     .bubble.bot { align-self: flex-start; background: rgba(181,55,242,0.1); border: 1px solid rgba(181,55,242,0.2); }
+    .bubble.err { align-self: flex-start; background: rgba(255,42,95,0.1); border: 1px solid rgba(255,42,95,0.25); color: #ff9db5; }
     .chat-input-row { display: flex; gap: 8px; margin-top: 8px; }
-    .chat-input-row input {
-      flex: 1; padding: 12px 13px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.35); color: #fff; outline: none; font-size: 13px;
-    }
+    .chat-input-row input { flex: 1; padding: 12px 13px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.35); color: #fff; outline: none; font-size: 13px; }
     .chat-input-row button { padding: 0 16px; border: none; border-radius: 13px; background: var(--cyan); color: #001018; font-weight: 800; }
+    .ctx-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 20px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); color: var(--cyan); margin-bottom: 9px; }
+    .ctx-chip button { background: none; border: none; color: var(--muted); font-size: 13px; line-height: 1; }
 
-    /* Bottom nav */
-    .bottom-nav-wrap {
-      position: fixed; bottom: 0; left: 0; width: 100%; display: none; justify-content: center;
-      padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100;
-      background: linear-gradient(to top, var(--bg) 35%, transparent);
-    }
+    /* ===== OUTLOOK / SEKTOR ===== */
+    .scn { background: rgba(0,0,0,0.3); border-radius: 13px; padding: 12px; margin-bottom: 9px; border-left: 3px solid var(--purple); }
+    .scn h5 { font-size: 12px; font-weight: 800; margin-bottom: 5px; color: #e2e8f0; }
+    .scn p { font-size: 11.5px; line-height: 1.55; color: var(--muted); }
+    .bias-pill { display: inline-block; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 20px; margin-bottom: 12px; }
+    .bias-BULLISH { background: rgba(0,255,157,0.13); color: var(--green); border: 1px solid rgba(0,255,157,0.3); }
+    .bias-NETRAL { background: rgba(255,183,3,0.12); color: var(--yellow); border: 1px solid rgba(255,183,3,0.3); }
+    .bias-BEARISH { background: rgba(255,42,95,0.12); color: var(--red); border: 1px solid rgba(255,42,95,0.3); }
+    .sec-row { display: flex; align-items: center; gap: 9px; padding: 7px 0; font-size: 12px; }
+    .sec-name { width: 92px; font-weight: 700; font-size: 11px; }
+    .sec-bar { flex: 1; height: 6px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; position: relative; }
+    .sec-bar > i { position: absolute; top: 0; height: 100%; }
+    .sec-val { width: 56px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+
+    /* ===== NAV ===== */
+    .bottom-nav-wrap { position: fixed; bottom: 0; left: 0; width: 100%; display: none; justify-content: center; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100; background: linear-gradient(to top, var(--bg) 35%, transparent); }
     .bottom-nav-wrap.show { display: flex; }
-    .bottom-nav {
-      width: 94%; max-width: 430px; display: flex; justify-content: space-around;
-      background: rgba(13,17,31,0.92); backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 26px; padding: 9px 4px;
-    }
-    .nav-item {
-      width: 18%; display: flex; flex-direction: column; align-items: center; gap: 2px;
-      font-size: 9px; font-weight: 700; color: #4b5563; text-transform: uppercase;
-    }
+    .bottom-nav { width: 94%; max-width: 430px; display: flex; justify-content: space-around; background: rgba(13,17,31,0.92); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 26px; padding: 9px 4px; }
+    .nav-item { width: 16%; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 8.5px; font-weight: 700; color: #4b5563; text-transform: uppercase; }
     .nav-item.active { color: var(--cyan); }
-    .nav-item .ico { font-size: 17px; }
+    .nav-item .ico { font-size: 16px; }
 
     .loading-inline { font-size: 12px; color: var(--muted); }
     .empty { text-align: center; color: var(--muted); font-size: 13px; padding: 22px 10px; line-height: 1.5; }
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 96px; z-index: 500; background: rgba(13,17,31,0.96); border: 1px solid rgba(0,229,255,0.3); color: #e6ecf5; font-size: 12px; padding: 10px 16px; border-radius: 12px; opacity: 0; transition: opacity 0.25s; pointer-events: none; max-width: 90%; text-align: center; }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
   <div id="splash">
     <div class="splash-rocket">🚀</div>
     <div class="splash-logo">NEXUS</div>
-    <div class="splash-sub">Precision Engine V12</div>
+    <div class="splash-sub">Precision Engine V13</div>
     <div class="splash-bar"><i></i></div>
   </div>
+
+  <div id="toast" class="toast"></div>
 
   <div class="app">
     <!-- AUTH -->
     <div id="authView">
       <div class="auth-brand">
         <h1>NEXUS</h1>
-        <p>Precision Trade Engine V12</p>
+        <p>Precision Engine V13 · Bursa Efek Indonesia</p>
       </div>
       <div class="auth-card">
         <div class="auth-tabs">
           <div class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">Masuk</div>
           <div class="auth-tab" id="tabRegister" onclick="switchAuth('register')">Daftar</div>
         </div>
-        <div id="authMsg" class="auth-msg"></div>
+        <div class="auth-msg" id="authMsg"></div>
         <div class="field">
           <label>Username</label>
-          <input id="authUser" type="text" placeholder="contoh: trader01" autocomplete="username">
+          <input id="authUser" type="text" placeholder="4-32 karakter" autocomplete="username">
         </div>
         <div class="field">
           <label>Password</label>
-          <input id="authPass" type="password" placeholder="minimal 8 karakter" autocomplete="current-password">
+          <input id="authPass" type="password" placeholder="minimal 8 karakter" autocomplete="current-password"
+                 onkeydown="if(event.key==='Enter')submitAuth()">
         </div>
         <div class="field" id="inviteField" style="display:none;">
           <label>Kode Undangan (opsional)</label>
@@ -384,56 +323,67 @@
 
     <!-- APP -->
     <div id="appView">
-      <!-- HOME -->
+
+      <!-- ================= HOME ================= -->
       <div id="viewHome" class="view active">
         <div class="top-row">
           <div style="display:flex;align-items:center;gap:11px;">
             <div class="avatar" id="userAvatar">N</div>
             <div>
               <div style="font-weight:800;font-size:14px;" id="userName">User</div>
-              <div style="font-size:11px;color:var(--muted);">NEXUS V12</div>
+              <div style="font-size:11px;color:var(--muted);" id="userRoleLine">NEXUS V13</div>
             </div>
           </div>
           <div class="quota-pill">Kuota: <span id="quotaVal">-</span></div>
         </div>
 
-        <!-- IHSG SNAPSHOT -->
+        <!-- IHSG: CHART + SNAPSHOT -->
         <div class="glass">
-          <div class="section-label"><span class="grad">●</span> IHSG Market Snapshot</div>
-          <div class="metric-grid">
-            <div class="metric"><span>IHSG</span><b id="ihsgPrice">-</b></div>
-            <div class="metric"><span>Perubahan</span><b id="ihsgChange">-</b></div>
+          <div class="section-label" style="justify-content:space-between;">
+            <span><span class="grad">●</span> IHSG</span>
+            <span id="ihsgHeadline" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0;text-transform:none;">-</span>
+          </div>
+          <div class="tf-row">
+            <button class="tf-btn active" data-tf="60" onclick="setIhsgTf(60,this)">3 Bln</button>
+            <button class="tf-btn" data-tf="120" onclick="setIhsgTf(120,this)">6 Bln</button>
+            <button class="tf-btn" data-tf="9999" onclick="setIhsgTf(9999,this)">1 Thn</button>
+          </div>
+          <div id="ihsgChart" class="chart-host"></div>
+          <div class="chart-legend">
+            <span><i style="background:#00e5ff;"></i>EMA21</span>
+            <span><i style="background:#b537f2;"></i>EMA50</span>
+            <span><i style="background:#8b9bb4;"></i>Support / Resistance</span>
+          </div>
+          <div class="metric-grid" style="margin-top:12px;">
             <div class="metric"><span>Regime</span><b id="ihsgRegime">-</b></div>
             <div class="metric"><span>ADX</span><b id="ihsgAdx">-</b></div>
+            <div class="metric"><span>Support</span><b id="ihsgSup">-</b></div>
+            <div class="metric"><span>Resistance</span><b id="ihsgRes">-</b></div>
           </div>
-          <div class="metric-grid">
-            <div class="metric"><span>Breadth > EMA21</span><b id="ihsgBreadth">-</b></div>
-            <div class="metric"><span>RSI</span><b id="ihsgRsi">-</b></div>
-          </div>
-          <div id="ihsgMiniOutlook" style="font-size:12px;color:#cbd5e1;line-height:1.55;margin:8px 0 12px;">Memuat data IHSG...</div>
-          <button class="btn-ghost" onclick="loadFullOutlook()">Lihat Outlook Lengkap</button>
+          <div class="row"><span>Saham &gt; EMA21</span><b id="ihsgBreadth">-</b></div>
+          <div class="row"><span>ROC20 positif</span><b id="ihsgRoc">-</b></div>
+          <div class="row"><span>RSI / ATR</span><b id="ihsgRsi">-</b></div>
+          <button class="btn-ghost" style="margin-top:12px;" onclick="loadFullOutlook()">Lihat Outlook Lengkap</button>
         </div>
 
-        <!-- SECTOR STRENGTH -->
         <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Kekuatan Sektor</div>
+          <div class="section-label"><span class="grad">●</span> Kekuatan Sektor <span style="color:#475569;font-weight:600;text-transform:none;letter-spacing:0;">(ROC20 relatif IHSG)</span></div>
           <div id="sectorBox"><div class="loading-inline">Memuat sektor...</div></div>
         </div>
 
         <div class="glass">
           <div class="section-label"><span class="grad">●</span> Analisa Cepat</div>
           <div class="search-box">
-            <input id="tickerInput" type="text" placeholder="KODE SAHAM" maxlength="6">
+            <input id="tickerInput" type="text" placeholder="KODE SAHAM" maxlength="6"
+                   onkeydown="if(event.key==='Enter')analyzeTicker()">
             <button onclick="analyzeTicker()">→</button>
           </div>
-          <div class="disclaimer" style="margin-top:0;">Data Yahoo (delayed). Validasi Premium hanya untuk Admin.</div>
+          <div class="disclaimer" style="margin-top:0;">Hasil di-cache 90 menit — membuka ulang saham yang sama tidak memotong kuota.</div>
         </div>
 
         <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Bandar Pulse Hari Ini</div>
-          <div id="bandarPulse">
-            <div class="loading-inline">Belum ada data Deep Scan.</div>
-          </div>
+          <div class="section-label"><span class="grad">●</span> Bandar Pulse</div>
+          <div id="bandarPulse"><div class="loading-inline">Belum ada data Deep Scan.</div></div>
         </div>
 
         <div class="glass">
@@ -441,193 +391,240 @@
           <div id="radarList"><div class="loading-inline">Memuat radar...</div></div>
           <div id="adminDeepWrap" style="display:none;margin-top:12px;">
             <button class="btn-ghost yellow" id="btnDeepScan" onclick="runDeepScan()">⚡ Deep Scan Top 15 + Broksum</button>
+            <div class="prog" id="deepProgWrap" style="display:none;"><i id="deepProg"></i></div>
             <div id="deepStatus" class="disclaimer" style="margin-top:8px;"></div>
           </div>
           <div class="disclaimer" id="radarMeta" style="margin-top:8px;"></div>
         </div>
       </div>
 
-      <!-- OUTLOOK FULL -->
+      <!-- ================= OUTLOOK ================= -->
       <div id="viewOutlook" class="view">
         <div class="top-row">
-          <div style="font-weight:800;font-size:16px;">IHSG Market Outlook</div>
-          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+          <div style="font-weight:800;font-size:16px;">Outlook IHSG</div>
+          <button class="btn-ghost btn-sm" onclick="showView('viewHome')">←</button>
         </div>
-        <div class="glass">
-          <div id="fullOutlook" style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:#d7e0ee;">Memuat outlook...</div>
-        </div>
+        <div id="outlookBox"><div class="glass"><div class="loading-inline">Memuat outlook...</div></div></div>
+        <button class="btn-ghost btn-sm" style="width:100%;" onclick="loadFullOutlook(true)">↻ Hitung Ulang</button>
+        <div class="disclaimer" id="outlookMeta"></div>
       </div>
 
-<!-- RESULT -->
+      <!-- ================= RESULT ================= -->
       <div id="viewResult" class="view">
         <div class="top-row">
           <div>
             <div style="font-size:19px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="resTicker">-</div>
             <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="resSetupLine">-</div>
           </div>
-          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+          <button class="btn-ghost btn-sm" onclick="showView('viewHome')">←</button>
         </div>
 
-        <div id="adminPanel" style="display:none;gap:8px;margin-bottom:12px;" class="two">
-          <button class="btn-ghost yellow" id="btnPremium" onclick="analyzeTicker(null, true)">⚡ Validasi Premium</button>
-          <button class="btn-ghost purple" onclick="addToPaperWatch()">+ Pantau Setup</button>
-        </div>
+        <div id="dataModeBox" class="info-box" style="display:none;"></div>
 
-        <div id="fakeWarning" class="warning-box" style="display:none;"></div>
-
-        <!-- Header score -->
-        <div class="glass">
-          <div class="score-ring-wrap">
-            <div class="score-ring" id="resRing" style="--pct:0"><b id="resTQ">-</b></div>
-            <div style="flex:1;">
-              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px;">
-                <span class="badge" id="resGrade">-</span>
-                <span class="setup-tag" id="resSetupTag">-</span>
-                <span class="bandar-tag" id="resBandarTag">-</span>
-              </div>
-              <div class="row"><span>Technical</span><b id="resScore">-</b></div>
-              <div class="row"><span>Harga</span><b id="resPrice">-</b></div>
-              <div class="row"><span>Sumber</span><b id="resSource">-</b></div>
-            </div>
+        <!-- STATUS ENTRY -->
+        <div id="statusCard" class="status-card wait">
+          <div class="status-head">
+            <div class="status-dot"></div>
+            <div class="status-title" id="statusTitle">-</div>
           </div>
-          <div id="resStatus" class="status-pill status-wait">-</div>
+          <div class="status-reason" id="statusReason">-</div>
+          <div class="status-pos" id="statusPos">-</div>
+          <div class="trig-box">
+            <div class="t">Trigger yang ditunggu</div>
+            <div class="v" id="statusTrigger">-</div>
+          </div>
+          <div class="trig-box invalid">
+            <div class="t">Batal kalau</div>
+            <div class="v" id="statusInvalid">-</div>
+          </div>
         </div>
 
-        <!-- Tabs -->
+        <div class="two" style="margin-bottom:12px;">
+          <button class="btn-ghost purple" onclick="gotoTab('panelStory')">🔍 Analisa Teliti</button>
+          <button class="btn-ghost green" onclick="addToPaperWatch()">+ Pantau Setup</button>
+        </div>
+        <div id="adminPanel" style="display:none;margin-bottom:12px;">
+          <button class="btn-ghost yellow" onclick="analyzeTicker(null, true)">⚡ Validasi Premium (GOAPI + Broksum)</button>
+        </div>
+
+        <!-- TABS -->
         <div class="res-tabs">
           <div class="res-tab active" data-panel="panelPlan" onclick="switchResTab(this)">Plan</div>
-          <div class="res-tab" data-panel="panelTA" onclick="switchResTab(this)">TA Detail</div>
+          <div class="res-tab" data-panel="panelTA" onclick="switchResTab(this)">TA</div>
           <div class="res-tab" data-panel="panelSmart" onclick="switchResTab(this)">Smart $</div>
+          <div class="res-tab" data-panel="panelStory" onclick="switchResTab(this)">Narasi</div>
           <div class="res-tab" data-panel="panelChart" onclick="switchResTab(this)">Chart</div>
         </div>
 
-        <!-- PLAN -->
+        <!-- ---------- PANEL: PLAN ---------- -->
         <div id="panelPlan" class="res-panel active">
           <div class="glass">
-            <div class="section-label">Trading Plan</div>
-            <div class="plan-grid">
-              <div class="plan-cell entry"><span>Entry</span><b id="resEntry">-</b></div>
-              <div class="plan-cell tp"><span>TP1</span><b id="resTP1">-</b></div>
-              <div class="plan-cell sl"><span>Stop Loss</span><b id="resSL">-</b></div>
-              <div class="plan-cell tp"><span>TP2</span><b id="resTP2">-</b></div>
-              <div class="plan-cell"><span>R : R</span><b id="resRR">-</b></div>
-              <div class="plan-cell"><span>Risk %</span><b id="resRiskPct">-</b></div>
+            <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;">
+              <div>
+                <div class="score-big" id="resTQ">-</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:3px;">Trade Quality</div>
+              </div>
+              <div style="flex:1;">
+                <div class="tagrow">
+                  <span class="badge" id="resGrade">-</span>
+                  <span class="setup-tag" id="resSetupTag">-</span>
+                  <span class="bandar-tag unknown" id="resBandarTag">-</span>
+                </div>
+                <div class="row"><span>Technical</span><b id="resScore">-</b></div>
+                <div class="row"><span>Harga</span><b id="resPrice">-</b></div>
+                <div class="row"><span>Sumber</span><b id="resSource">-</b></div>
+              </div>
             </div>
-            <div class="plan-box" style="margin-top:4px;">
-              <div class="plan-title">Entry Trigger</div>
-              <div class="plan-desc" id="resTrigger" style="margin-top:0;font-size:12px;color:#e2e8f0;">-</div>
+
+            <div class="plan-box">
+              <div class="plan-title">Zona Entry</div>
+              <div class="plan-val" id="resEntry">-</div>
+              <div class="plan-desc" id="resAnchor">-</div>
             </div>
             <div class="plan-box sl">
-              <div class="plan-title">Invalidation / Cut Loss</div>
-              <div class="plan-desc" id="resInvalid" style="margin-top:0;font-size:12px;color:#ff8aa8;">-</div>
+              <div class="plan-title">Stop Loss</div>
+              <div class="plan-val" id="resSL">-</div>
+              <div class="plan-desc" id="resRiskPct">-</div>
             </div>
-            <div class="plan-box">
-              <div class="plan-title">Exit Trigger</div>
-              <div class="plan-desc" id="resExit" style="margin-top:0;font-size:12px;color:#cbd5e1;">-</div>
+            <div class="plan-box tp">
+              <div class="plan-title">Take Profit</div>
+              <div class="plan-val" id="resTP">-</div>
+              <div class="plan-desc" id="resTPSrc">-</div>
             </div>
-            <div class="disclaimer" id="resEntryStyle" style="margin-top:6px;"></div>
+            <div class="row" style="margin-top:6px;"><span>RR ke TP1 (worst fill)</span><b id="resRR">-</b></div>
+            <div class="row"><span>RR dari harga sekarang</span><b id="resRRNow">-</b></div>
           </div>
 
+          <!-- SUPPORT / RESISTANCE -->
           <div class="glass">
-            <div class="section-label">Support / Resistance Map</div>
+            <div class="section-label"><span class="grad">●</span> Support / Resistance</div>
             <div class="sr-grid">
-              <div class="sr-cell"><span>Classic Sup</span><b id="resCSup">-</b></div>
-              <div class="sr-cell"><span>Classic Res</span><b id="resCRes">-</b></div>
-              <div class="sr-cell"><span>Dynamic Sup</span><b id="resDSup">-</b></div>
-              <div class="sr-cell"><span>Dynamic Res</span><b id="resDRes">-</b></div>
-              <div class="sr-cell"><span>Fibo Sup</span><b id="resFSup">-</b></div>
-              <div class="sr-cell"><span>Fibo Res</span><b id="resFRes">-</b></div>
+              <div class="sr-cell sup"><span>Nearest Sup</span><b id="resNSup">-</b></div>
+              <div class="sr-cell res"><span>Nearest Res</span><b id="resNRes">-</b></div>
+              <div class="sr-cell sup"><span>Swing Low</span><b id="resSwL">-</b></div>
+              <div class="sr-cell res"><span>Swing High</span><b id="resSwH">-</b></div>
+              <div class="sr-cell sup"><span>Dynamic Sup</span><b id="resDSup">-</b></div>
+              <div class="sr-cell res"><span>Dynamic Res</span><b id="resDRes">-</b></div>
+              <div class="sr-cell sup"><span>Fibo Sup</span><b id="resFSup">-</b></div>
+              <div class="sr-cell res"><span>Fibo Res</span><b id="resFRes">-</b></div>
             </div>
+            <div id="resLevelsList" style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
           </div>
 
+          <!-- KONFIRMASI -->
           <div class="glass">
-            <div class="section-label">Konfirmasi Sinyal</div>
+            <div class="section-label"><span class="grad">●</span> Konfirmasi</div>
             <div class="confirm-list" id="resConfirm">-</div>
           </div>
 
+          <!-- GATE -->
+          <div class="glass" id="gateBox">
+            <div class="section-label"><span class="grad">●</span> Catatan Gate <span id="gateCount" style="color:#475569;font-weight:600;"></span></div>
+            <div id="gateList"></div>
+          </div>
+
+          <!-- POSITION SIZE -->
           <div class="glass">
-            <div class="section-label">Position Size</div>
+            <div class="section-label"><span class="grad">●</span> Position Size</div>
             <div class="risk-row">
               <button class="risk-btn active" data-risk="1" onclick="setRisk(1,this)">1%</button>
               <button class="risk-btn" data-risk="1.5" onclick="setRisk(1.5,this)">1.5%</button>
               <button class="risk-btn" data-risk="2" onclick="setRisk(2,this)">2%</button>
             </div>
             <div class="field" style="margin-top:6px;">
-              <label style="font-size:10px;color:var(--muted);font-weight:700;">Modal (Rp)</label>
-              <input id="capitalInput" type="number" value="10000000" style="width:100%;padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35);color:#fff;margin-top:5px;font-family:'JetBrains Mono',monospace;">
+              <label>Modal (Rp)</label>
+              <input id="capitalInput" type="number" value="10000000" oninput="calcLot()">
             </div>
+            <div class="row"><span>Risiko per lembar</span><b id="resRiskShare">-</b></div>
             <div class="row"><span>Estimasi lot</span><b id="resLot">-</b></div>
-            <div class="disclaimer">Perhitungan kasar. Sesuaikan fee & aturan broker.</div>
+            <div class="row"><span>Nilai posisi</span><b id="resPosVal">-</b></div>
+            <div class="disclaimer" style="text-align:left;">Dihitung dari entryHigh − SL. Belum termasuk fee broker.</div>
           </div>
         </div>
 
-        <!-- TA DETAIL -->
+        <!-- ---------- PANEL: TA ---------- -->
         <div id="panelTA" class="res-panel">
           <div class="glass">
-            <div class="section-label">Logical Context</div>
+            <div class="section-label"><span class="grad">●</span> Konteks Teknikal</div>
             <div class="row"><span>Arah Dominan</span><b id="resArah">-</b></div>
-            <div class="row"><span>Struktur Swing</span><b id="resStruct">-</b></div>
-            <div class="row"><span>EMA 5 / 21</span><b id="resEmaPair">-</b></div>
-            <div class="row"><span>MACD</span><b id="resMacd">-</b></div>
+            <div class="row"><span>Struktur</span><b id="resStruct">-</b></div>
             <div class="row"><span>Cross Align</span><b id="resCross">-</b></div>
+            <div class="row"><span>EMA 21 / 50 / 99</span><b id="resEMA">-</b></div>
+            <div class="row"><span>MACD</span><b id="resMACD">-</b></div>
             <div class="row"><span>RSI</span><b id="resRSI">-</b></div>
             <div class="row"><span>ADX</span><b id="resADX">-</b></div>
+            <div class="row"><span>ATR</span><b id="resATR">-</b></div>
             <div class="row"><span>RVOL</span><b id="resRvol">-</b></div>
             <div class="row"><span>RS vs IHSG 20D</span><b id="resRS">-</b></div>
+            <div class="row"><span>Likuiditas 20D</span><b id="resLiq">-</b></div>
             <div class="row"><span>Sektor</span><b id="resSector">-</b></div>
             <div class="row"><span>Market Regime</span><b id="resRegime">-</b></div>
           </div>
           <div class="glass">
-            <div class="section-label">Score Breakdown (max 90 + setup)</div>
-            <div id="resBreakdown">-</div>
+            <div class="section-label"><span class="grad">●</span> Rincian Skor Teknikal</div>
+            <div id="scoreBreak"></div>
           </div>
         </div>
 
-        <!-- SMART MONEY -->
+        <!-- ---------- PANEL: SMART MONEY ---------- -->
         <div id="panelSmart" class="res-panel">
           <div class="glass" id="broksumBox">
-            <div class="section-label">Bandarmologi (Broksum)</div>
-            <div class="row"><span>Status</span><b id="resBandarStatus">-</b></div>
-            <div class="row"><span>Bandar Score</span><b id="resBandarScore">-</b></div>
-            <div class="row"><span>Net Buy (lot)</span><b id="resNetBuy">-</b></div>
-            <div style="margin-top:10px;font-size:12px;color:#cbd5e1;line-height:1.5;" id="resTopBrokers">-</div>
-            <div class="disclaimer" style="margin-top:10px;">Data broksum hari ini via GOAPI (Deep Scan / Validasi Premium). Jika UNKNOWN, jalankan Deep Scan sebagai Admin.</div>
+            <div class="section-label"><span class="grad">●</span> Bandarmologi (Broker Summary)</div>
+            <div id="broksumInner"></div>
           </div>
         </div>
 
-        <!-- CHART -->
+        <!-- ---------- PANEL: NARASI ---------- -->
+        <div id="panelStory" class="res-panel">
+          <div class="glass">
+            <div class="section-label" style="justify-content:space-between;">
+              <span><span class="grad">●</span> Analisa Teliti</span>
+              <span id="anaSrc" style="color:#475569;font-weight:600;text-transform:none;letter-spacing:0;"></span>
+            </div>
+            <div id="anaContent"><div class="empty">Tekan tombol di bawah untuk menyusun analisa.</div></div>
+            <button class="btn-ghost purple" id="btnAnalisa" style="margin-top:10px;" onclick="loadAnalisa()">Susun Analisa</button>
+          </div>
+        </div>
+
+        <!-- ---------- PANEL: CHART ---------- -->
         <div id="panelChart" class="res-panel">
           <div class="glass">
-            <div class="section-label">Chart</div>
-            <div id="tvChart" style="height:320px;border-radius:14px;overflow:hidden;background:#0a0e18;"></div>
+            <div class="section-label"><span class="grad">●</span> Chart + Level</div>
+            <div id="chartBox" class="chart-host"></div>
+            <div class="chart-legend">
+              <span><i style="background:#00e5ff;"></i>Zona entry</span>
+              <span><i style="background:#ff2a5f;"></i>Stop loss</span>
+              <span><i style="background:#00ff9d;"></i>TP1 / TP2</span>
+              <span><i style="background:#8b9bb4;"></i>Support / Resistance</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- AKUMULASI -->
+      <!-- ================= LISTS ================= -->
       <div id="viewAccum" class="view">
         <div class="section-label"><span class="grad">●</span> Akumulasi Bandar</div>
         <div id="accumList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
-
-      <!-- DISTRIBUSI -->
       <div id="viewDist" class="view">
         <div class="section-label"><span class="grad">●</span> Distribusi Bandar</div>
         <div id="distList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
-
-      <!-- PREMIUM WATCHLIST -->
       <div id="viewPremium" class="view">
         <div class="section-label"><span class="grad">●</span> Premium Watchlist</div>
         <div id="premiumList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
 
-      <!-- CHAT -->
+      <!-- ================= CHAT ================= -->
       <div id="viewChat" class="view">
-        <div class="section-label"><span class="grad">●</span> NEXUS Chat</div>
+        <div class="section-label" style="justify-content:space-between;">
+          <span><span class="grad">●</span> NEXUS Chat</span>
+          <span id="chatQuotaLbl" style="color:#475569;font-weight:600;text-transform:none;letter-spacing:0;"></span>
+        </div>
+        <div id="chatCtxWrap"></div>
         <div class="glass chat-wrap">
           <div class="chat-log" id="chatLog">
-            <div class="bubble bot">Halo. Tanya seputar teknikal atau setup. Ingat: ini alat analisis, bukan saran investasi.</div>
+            <div class="bubble bot">Halo. Tanya apa saja soal teknikal atau setup. Kalau kamu baru membuka analisa sebuah saham, angka-angkanya otomatis ikut terkirim sebagai konteks — jadi jawabannya tidak mengarang harga.</div>
           </div>
           <div class="chat-input-row">
             <input id="chatInput" type="text" placeholder="Tulis pertanyaan..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -636,21 +633,26 @@
         </div>
       </div>
 
-      <!-- PROFILE -->
+      <!-- ================= PROFILE ================= -->
       <div id="viewProfile" class="view">
         <div class="glass">
-          <div class="section-label">Profil</div>
+          <div class="section-label"><span class="grad">●</span> Profil</div>
           <div class="row"><span>Username</span><b id="profUser">-</b></div>
           <div class="row"><span>Role</span><b id="profRole">-</b></div>
-          <div class="row"><span>Kuota</span><b id="profQuota">-</b></div>
+          <div class="row"><span>Kuota scan bulan ini</span><b id="profQuota">-</b></div>
         </div>
         <div class="glass">
-          <div class="section-label">Paper Watchlist Saya</div>
+          <div class="section-label"><span class="grad">●</span> Paper Watchlist Saya</div>
           <div id="myWatchList"><div class="empty">Belum ada setup yang dipantau.</div></div>
+        </div>
+        <div class="glass" id="diagBox" style="display:none;">
+          <div class="section-label"><span class="grad">●</span> Diagnostik (Admin)</div>
+          <button class="btn-ghost btn-sm" style="width:100%;" onclick="loadDiag()">Jalankan Cek Sistem</button>
+          <div id="diagOut" style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;white-space:pre-wrap;font-family:'JetBrains Mono',monospace;"></div>
         </div>
         <button class="btn-ghost red" onclick="logout()">Keluar</button>
         <p class="disclaimer" style="margin-top:14px;">
-          NEXUS V12 — Precision Engine<br>
+          NEXUS V13 — Precision Engine<br>
           Perangkat lunak analisis data (SaaS).<br>
           Bukan penasihat investasi berizin OJK.<br>
           Segala risiko ditanggung pengguna.
@@ -666,514 +668,883 @@
       <div class="nav-item" data-view="viewAccum" onclick="showView('viewAccum');loadAccumulation()"><span class="ico">↑</span>Akum</div>
       <div class="nav-item" data-view="viewDist" onclick="showView('viewDist');loadDistribution()"><span class="ico">↓</span>Dist</div>
       <div class="nav-item" data-view="viewPremium" onclick="showView('viewPremium');loadPremium()"><span class="ico">★</span>Watch</div>
-      <div class="nav-item" data-view="viewProfile" onclick="showView('viewProfile');loadMyWatch()"><span class="ico">◉</span>Profil</div>
+      <div class="nav-item" data-view="viewChat" onclick="showView('viewChat');openChat()"><span class="ico">✦</span>Chat</div>
+      <div class="nav-item" data-view="viewProfile" onclick="showView('viewProfile');loadProfile()"><span class="ico">◉</span>Profil</div>
     </div>
   </div>
 
-<script>
-// ================== CONFIG ==================
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzJjjnrVSXgNNkhpcAVUSLc931Mozx7v9PhclT54HDNtkcywpaMDK_YJAtmOGGavpv8/exec";
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <script>
+// =====================================================================
+// CONFIG — ganti dengan Web App URL hasil deploy backend V13
+// =====================================================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbw4VYls7gzCSglY7S9fGswe-Ry-viE3ZovTKCQwyvVUqTs581Y02lPZskeQeAetUgAU/exec";
 
-const STORAGE_KEY = "nexus_v12_session";
-let session = null;
-let authMode = "login";
+const STORAGE_KEY = "nexus_v13_session";
+let session     = null;
+let authMode    = "login";
 let currentRisk = 1;
-let lastResult = null;
+let lastResult  = null;
+let chatCtx     = null;
+let ihsgData    = null;
+let ihsgTf      = 60;
+let chart = null, candleSeries = null, volSeries = null;
+let ihsgChart = null, ihsgCandle = null, ihsgE21 = null, ihsgE50 = null;
+let chartDirty = true;
+let deepPoll = null;
 
 function $(id) { return document.getElementById(id); }
 
+function esc(s) {
+  return String(s === null || s === undefined ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function fmt(n) {
+  return (n === null || n === undefined || isNaN(n)) ? "-" : Number(n).toLocaleString("id-ID");
+}
+function fmtRp(v) {
+  if (!v && v !== 0) return "-";
+  if (v >= 1e12) return "Rp" + (v / 1e12).toFixed(2) + " T";
+  if (v >= 1e9)  return "Rp" + (v / 1e9).toFixed(2) + " M";
+  if (v >= 1e6)  return "Rp" + (v / 1e6).toFixed(1) + " jt";
+  return "Rp" + fmt(Math.round(v));
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+// =====================================================================
+// API
+// =====================================================================
 async function api(action, payload = {}, timeout = 45000) {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeout);
+  const timer = setTimeout(() => ctrl.abort(), timeout);
   try {
-    const body = { action, ...payload };
+    const body = Object.assign({ action: action }, payload);
     if (session && session.token) body.token = session.token;
     const res = await fetch(GAS_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(body),
-      signal: ctrl.signal
+      signal: ctrl.signal,
+      redirect: "follow"
     });
-    clearTimeout(t);
-    return await res.json();
+    clearTimeout(timer);
+    const data = await res.json();
+    if (data && data.code === "AUTH") {
+      clearSession();
+      toast("Sesi berakhir. Silakan masuk lagi.");
+      setTimeout(() => location.reload(), 1200);
+      return { status: "error", message: "Sesi berakhir." };
+    }
+    if (data && typeof data.remaining === "number") setQuota(data.remaining);
+    return data;
   } catch (e) {
-    clearTimeout(t);
+    clearTimeout(timer);
     throw e;
   }
 }
 
-function fmt(n) {
-  return (n == null || isNaN(n)) ? "-" : Number(n).toLocaleString("id-ID");
+function setQuota(v) {
+  const txt = (v < 0) ? "∞" : fmt(v);
+  if ($("quotaVal")) $("quotaVal").textContent = txt;
+  if ($("profQuota")) $("profQuota").textContent = txt;
+  if (session) { session.quota = v; localStorage.setItem(STORAGE_KEY, JSON.stringify(session)); }
 }
 
-function saveSession(data) {
-  session = data;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-function loadSession() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-function clearSession() {
-  session = null;
-  localStorage.removeItem(STORAGE_KEY);
-}
+// =====================================================================
+// SESSION + AUTH
+// =====================================================================
+function saveSession(d) { session = d; localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+function loadSession() { try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function clearSession() { session = null; localStorage.removeItem(STORAGE_KEY); }
 
-// ================== AUTH ==================
 function switchAuth(mode) {
   authMode = mode;
   $("tabLogin").classList.toggle("active", mode === "login");
   $("tabRegister").classList.toggle("active", mode === "register");
-  $("authBtn").textContent = mode === "login" ? "Masuk" : "Daftar Sekarang";
   $("inviteField").style.display = mode === "register" ? "block" : "none";
+  $("authBtn").textContent = mode === "login" ? "Masuk" : "Daftar";
   $("authMsg").className = "auth-msg";
-  $("authMsg").textContent = "";
 }
 
 function showAuthMsg(text, ok) {
-  const el = $("authMsg");
-  el.textContent = text;
-  el.className = "auth-msg " + (ok ? "ok" : "err");
+  const m = $("authMsg");
+  m.textContent = text;
+  m.className = "auth-msg " + (ok ? "ok" : "err");
 }
 
 async function submitAuth() {
-  const username = $("authUser").value.trim();
-  const password = $("authPass").value;
-  const invite = $("authInvite").value.trim();
-  if (!username || !password) { showAuthMsg("Username dan password wajib diisi."); return; }
+  const u = $("authUser").value.trim().toLowerCase();
+  const p = $("authPass").value;
+  if (!u || !p) return showAuthMsg("Username dan password wajib diisi.", false);
+  if (GAS_URL.indexOf("PASTE_") === 0) return showAuthMsg("GAS_URL belum diisi di file HTML ini.", false);
+
   const btn = $("authBtn");
   btn.disabled = true;
   btn.textContent = "Memproses...";
   try {
-    const data = await api("auth", {
-      type: authMode,
-      username,
-      login_id: username,
-      password,
-      invite
-    }, 18000);
-    if (data.status !== "success") {
-      showAuthMsg(data.message || "Gagal.");
-      return;
-    }
+    const d = await api("auth", {
+      type: authMode, username: u, login_id: u, password: p,
+      invite: $("authInvite").value.trim()
+    }, 30000);
+    if (d.status !== "success") { showAuthMsg(d.message || "Gagal.", false); return; }
     if (authMode === "register") {
-      showAuthMsg("Akun dibuat. Silakan login.", true);
+      showAuthMsg(d.message || "Akun dibuat. Silakan masuk.", true);
       switchAuth("login");
       return;
     }
-    saveSession({
-      token: data.token,
-      username: data.username,
-      role: data.role || "USER",
-      quota: data.quota
-    });
-    showAuthMsg("Berhasil masuk.", true);
-    setTimeout(() => enterApp(), 400);
+    saveSession(d);
+    enterApp();
   } catch (e) {
-    showAuthMsg("Gagal terhubung ke server.");
+    showAuthMsg("Tidak bisa menghubungi server. Cek GAS_URL & koneksi.", false);
   } finally {
     btn.disabled = false;
-    btn.textContent = authMode === "login" ? "Masuk" : "Daftar Sekarang";
+    btn.textContent = authMode === "login" ? "Masuk" : "Daftar";
   }
 }
 
 function logout() {
+  api("logout").catch(() => {});
   clearSession();
-  $("appView").classList.remove("show");
-  $("bottomNav").classList.remove("show");
-  $("authView").classList.add("show");
-  switchAuth("login");
+  location.reload();
 }
 
 function enterApp() {
   $("authView").classList.remove("show");
   $("appView").classList.add("show");
   $("bottomNav").classList.add("show");
-  const u = session.username || "U";
-  $("userAvatar").textContent = u.charAt(0).toUpperCase();
-  $("userName").textContent = u;
-  $("quotaVal").textContent = session.quota ?? "-";
-  $("profUser").textContent = u;
+
+  $("userName").textContent = session.username;
+  $("userAvatar").textContent = session.username.charAt(0).toUpperCase();
+  $("userRoleLine").textContent = "NEXUS V13 · " + (session.role || "USER");
+  $("profUser").textContent = session.username;
   $("profRole").textContent = session.role || "USER";
-  $("profQuota").textContent = session.quota ?? "-";
+  setQuota(typeof session.quota === "number" ? session.quota : 0);
+
   if (session.role === "ADMIN") {
     $("adminDeepWrap").style.display = "block";
+    $("adminPanel").style.display = "block";
+    $("diagBox").style.display = "block";
   }
   showView("viewHome");
   loadIHSG();
   loadSectorStrength();
   loadRadar();
   loadBandarPulse();
+  checkDeepStatus(true);
 }
 
 function showView(id) {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  const el = $(id);
-  if (el) el.classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(n => {
-    n.classList.toggle("active", n.getAttribute("data-view") === id);
-  });
+  $(id).classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.view === id));
+  window.scrollTo(0, 0);
+  if (id === "viewHome") setTimeout(() => resizeOne(ihsgChart, "ihsgChart"), 80);
+  if (id === "viewResult") setTimeout(() => resizeOne(chart, "chartBox"), 80);
 }
 
-// ================== RADAR & DEEP SCAN ==================
+// =====================================================================
+// IHSG — snapshot + CHART (kunci utama dashboard)
+// =====================================================================
+async function loadIHSG() {
+  try {
+    const d = await api("getIHSG", {}, 30000);
+    if (d.status !== "success") return;
+    ihsgData = d;
+
+    const up = d.changePct >= 0;
+    $("ihsgHeadline").innerHTML = '<b style="font-size:15px;">' + fmt(d.price) + '</b> ' +
+      '<span style="color:' + (up ? "var(--green)" : "var(--red)") + ';">' + (up ? "▲ +" : "▼ ") + d.changePct + '%</span>';
+    $("ihsgRegime").textContent = d.regime;
+    $("ihsgRegime").style.color = d.regime === "BULLISH" ? "var(--green)" : d.regime === "BEARISH" ? "var(--red)" : "var(--yellow)";
+    $("ihsgAdx").textContent = d.adx;
+    $("ihsgSup").textContent = fmt(d.support);
+    $("ihsgRes").textContent = fmt(d.resistance);
+    const b = d.breadth || {};
+    $("ihsgBreadth").textContent = b.aboveEma21Pct != null ? b.aboveEma21Pct + "% (" + (b.sampleSize || 0) + " saham)" : "belum ada EOD";
+    $("ihsgRoc").textContent = b.positiveRoc20Pct != null ? b.positiveRoc20Pct + "%" : "belum ada EOD";
+    $("ihsgRsi").textContent = d.rsi + " / " + d.atrPct + "%";
+
+    renderIhsgChart();
+  } catch (e) { /* diam */ }
+}
+
+function setIhsgTf(n, el) {
+  ihsgTf = n;
+  document.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("active"));
+  if (el) el.classList.add("active");
+  renderIhsgChart();
+}
+
+function renderIhsgChart() {
+  const box = $("ihsgChart");
+  if (!ihsgData || !ihsgData.chart || !ihsgData.chart.bars || !ihsgData.chart.bars.length) {
+    box.innerHTML = '<div class="empty">Data chart IHSG belum tersedia.</div>';
+    return;
+  }
+  if (!window.LightweightCharts) {
+    box.innerHTML = '<div class="empty">Library chart gagal dimuat. Cek koneksi ke unpkg.com.</div>';
+    return;
+  }
+  if (ihsgChart) { try { ihsgChart.remove(); } catch (e) {} ihsgChart = null; }
+  box.innerHTML = "";
+
+  const all = ihsgData.chart.bars;
+  const bars = all.slice(Math.max(0, all.length - ihsgTf));
+  const minT = bars[0].t;
+
+  ihsgChart = LightweightCharts.createChart(box, {
+    width: box.clientWidth || 340,
+    height: 210,
+    layout: { background: { color: "#070b14" }, textColor: "#8b9bb4", fontSize: 9 },
+    grid: { vertLines: { color: "rgba(255,255,255,0.03)" }, horzLines: { color: "rgba(255,255,255,0.03)" } },
+    rightPriceScale: { borderColor: "rgba(255,255,255,0.07)", scaleMargins: { top: 0.14, bottom: 0.12 } },
+    timeScale: { borderColor: "rgba(255,255,255,0.07)", rightOffset: 3 },
+    handleScale: { axisPressedMouseMove: false },
+    crosshair: { mode: 0 }
+  });
+
+  ihsgCandle = ihsgChart.addCandlestickSeries({
+    upColor: "#00ff9d", downColor: "#ff2a5f",
+    borderUpColor: "#00ff9d", borderDownColor: "#ff2a5f",
+    wickUpColor: "rgba(0,255,157,0.7)", wickDownColor: "rgba(255,42,95,0.7)"
+  });
+  ihsgCandle.setData(bars.map(b => ({ time: b.t, open: b.o, high: b.h, low: b.l, close: b.c })));
+
+  const e21 = (ihsgData.chart.ema21 || []).filter(x => x.t >= minT);
+  if (e21.length) {
+    ihsgE21 = ihsgChart.addLineSeries({ color: "#00e5ff", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+    ihsgE21.setData(e21.map(x => ({ time: x.t, value: x.v })));
+  }
+  const e50 = (ihsgData.chart.ema50 || []).filter(x => x.t >= minT);
+  if (e50.length) {
+    ihsgE50 = ihsgChart.addLineSeries({ color: "#b537f2", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+    ihsgE50.setData(e50.map(x => ({ time: x.t, value: x.v })));
+  }
+
+  const addLine = (price, color, title, style) => {
+    if (!price || isNaN(price)) return;
+    ihsgCandle.createPriceLine({
+      price: Number(price), color: color, lineWidth: 1,
+      lineStyle: style === undefined ? 2 : style, axisLabelVisible: true, title: title
+    });
+  };
+  (ihsgData.levels || []).slice(0, 4).forEach(l => {
+    addLine(l.price, "rgba(139,155,180,0.5)", (l.type === "SUPPORT" ? "S" : "R") + " " + l.touches + "×", 3);
+  });
+  addLine(ihsgData.support, "rgba(0,255,157,0.7)", "Sup", 2);
+  addLine(ihsgData.resistance, "rgba(255,42,95,0.7)", "Res", 2);
+
+  ihsgChart.timeScale().fitContent();
+}
+
+function resizeOne(c, boxId) {
+  if (!c) return;
+  const box = $(boxId);
+  if (!box || !box.clientWidth) return;
+  try { c.applyOptions({ width: box.clientWidth }); } catch (e) {}
+}
+window.addEventListener("resize", () => {
+  resizeOne(ihsgChart, "ihsgChart");
+  resizeOne(chart, "chartBox");
+});
+
+// =====================================================================
+// SEKTOR
+// =====================================================================
+async function loadSectorStrength() {
+  const box = $("sectorBox");
+  try {
+    const d = await api("getSectorStrength", {}, 20000);
+    const data = d.data || {};
+    const rows = Object.keys(data).map(k => Object.assign({ name: k }, data[k]));
+    if (!rows.length) { box.innerHTML = '<div class="empty">Belum ada data. EOD Scan belum pernah selesai.</div>'; return; }
+    rows.sort((a, b) => (b.relative || 0) - (a.relative || 0));
+    const max = Math.max(4, ...rows.map(r => Math.abs(r.relative || 0)));
+    box.innerHTML = rows.map(r => {
+      const rel = r.relative || 0;
+      const w = Math.min(50, Math.abs(rel) / max * 50);
+      const pos = rel >= 0;
+      return '<div class="sec-row">' +
+        '<div class="sec-name">' + esc(r.name) + '</div>' +
+        '<div class="sec-bar"><i style="' + (pos ? 'left:50%;' : 'right:50%;') + 'width:' + w + '%;background:' + (pos ? 'var(--green)' : 'var(--red)') + ';"></i></div>' +
+        '<div class="sec-val" style="color:' + (pos ? 'var(--green)' : 'var(--red)') + '">' + (pos ? '+' : '') + rel + '%</div>' +
+        '</div>';
+    }).join("") +
+    '<div class="disclaimer" style="text-align:left;">ROC20 sektor dikurangi ROC20 IHSG. Positif = mengungguli pasar.</div>';
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Gagal memuat sektor.</div>';
+  }
+}
+
+// =====================================================================
+// RADAR
+// =====================================================================
+function statusClass(s) {
+  if (s === "BUY_ZONE") return "buy";
+  if (s === "AVOID") return "avoid";
+  return "wait";
+}
+
 async function loadRadar() {
   const box = $("radarList");
-  box.innerHTML = '<div class="loading-inline">Memuat radar...</div>';
   try {
-    const data = await api("radar", {}, 15000);
-    if (!data.data || !data.data.length) {
-      box.innerHTML = '<div class="empty">Radar kosong. Tunggu EOD Scan atau jalankan dari backend.</div>';
-      $("radarMeta").textContent = "";
-      return;
+    const d = await api("radar", {}, 25000);
+    const list = d.data || [];
+    if (!list.length) {
+      box.innerHTML = '<div class="empty">Radar kosong.' +
+        (d.running ? ' EOD Scan sedang berjalan (' + d.progress.done + '/' + d.progress.total + ').' : ' Jalankan testEOD() di editor Apps Script.') +
+        '</div>';
+    } else {
+      box.innerHTML = list.map(r => {
+        const cls = statusClass(r.entryStatus);
+        return '<div class="radar-card ' + cls + '" onclick="openTicker(\'' + esc(r.ticker) + '\')">' +
+          '<div class="radar-top">' +
+            '<div class="ticker">' + esc(r.ticker) + '</div>' +
+            '<div style="display:flex;gap:6px;align-items:center;">' +
+              '<span class="badge badge-' + esc(r.grade) + '">' + esc(r.grade) + '</span>' +
+              '<span style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:700;">' + fmt(r.price) + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="tagrow">' +
+            '<span class="setup-tag">' + esc(r.setup) + '</span>' +
+            '<span class="bandar-tag ' + (cls === 'buy' ? 'acc' : cls === 'avoid' ? 'dist' : 'unknown') + '">' + esc(r.entryLabel || r.entryStatus) + '</span>' +
+          '</div>' +
+          '<div style="font-size:11.5px;color:#aab8cc;line-height:1.45;margin-bottom:7px;">' + esc(r.entryReason || "") + '</div>' +
+          '<div class="meta">' +
+            '<span>TQ <b>' + r.tradeQuality + '</b></span>' +
+            '<span>RR <b>' + r.rr + '</b></span>' +
+            '<span>RSI <b>' + r.rsi + '</b></span>' +
+            '<span>' + esc(r.sector) + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join("");
     }
-    box.innerHTML = data.data.map(d => `
-      <div class="radar-card" onclick="analyzeTicker('${d.ticker}')">
-        <div class="radar-top">
-          <div class="ticker">${d.ticker}</div>
-          <span class="badge badge-${d.grade || 'C'}">Grade ${d.grade || '-'}</span>
-        </div>
-        <div class="setup-tag">${d.setup || '-'}</div>
-        <div class="meta">
-          <span>TQ <b>${d.tradeQuality ?? '-'}</b></span>
-          <span>RR <b>${d.rr ?? '-'}</b></span>
-          <span>RSI <b>${d.rsi ?? '-'}</b></span>
-          <span>${d.sector || ''}</span>
-        </div>
-      </div>
-    `).join("");
-    $("radarMeta").textContent = data.updatedAt ? "Update: " + new Date(data.updatedAt).toLocaleString("id-ID") : "";
-  } catch {
+    const st = d.stats || {};
+    $("radarMeta").textContent = "Diperbarui: " + (d.updatedAt ? new Date(d.updatedAt).toLocaleString("id-ID") : "-") +
+      (st.ok ? " · " + st.ok + " ok / " + st.fail + " gagal dari " + st.total : "");
+  } catch (e) {
     box.innerHTML = '<div class="empty">Gagal memuat radar.</div>';
   }
 }
 
+// =====================================================================
+// DEEP SCAN
+// =====================================================================
 async function runDeepScan() {
-  if (!session || session.role !== "ADMIN") {
-    alert("Hanya Admin.");
-    return;
-  }
   const btn = $("btnDeepScan");
-  const st = $("deepStatus");
   btn.disabled = true;
-  btn.textContent = "Deep Scan berjalan... (1-3 menit)";
-  st.textContent = "Menarik GOAPI historical + Broksum untuk Top 15. Jangan tutup halaman...";
+  btn.textContent = "Memulai...";
+  $("deepProgWrap").style.display = "block";
   try {
-    const data = await api("deepScan", {}, 200000);
-    if (data.status !== "success") {
-      st.textContent = data.message || "Gagal.";
+    const d = await api("deepScan", {}, 170000);
+    if (d.status === "error") {
+      $("deepStatus").textContent = d.message;
+      toast(d.message);
+      btn.disabled = false;
+      btn.textContent = "⚡ Deep Scan Top 15 + Broksum";
       return;
     }
-    const reasons = (data.stats && data.stats.reasons) ? " · " + data.stats.reasons.join("; ") : "";
-    st.textContent = `Selesai. OK ${data.stats?.success ?? "-"}/${data.stats?.total ?? "-"} · Acc ${data.accumulationCount} · Dist ${data.distributionCount} · Premium ${data.premiumCount}${reasons}`;
-    loadBandarPulse();
-    loadRadar();
+    if (d.note) toast(d.note);
+    startDeepPoll();
   } catch (e) {
-    st.textContent = "Gagal / timeout. Pastikan GOAPI_KEY terisi, Radar tidak kosong, dan role ADMIN.";
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "⚡ Deep Scan Top 15 + Broksum";
+    $("deepStatus").textContent = "Permintaan timeout, tapi job kemungkinan tetap jalan di background.";
+    startDeepPoll();
   }
 }
 
+function startDeepPoll() {
+  clearInterval(deepPoll);
+  deepPoll = setInterval(checkDeepStatus, 6000);
+  checkDeepStatus();
+}
+
+async function checkDeepStatus(silent) {
+  try {
+    const s = await api("deepScanStatus", {}, 20000);
+    const btn = $("btnDeepScan");
+    if (s.jobStatus === "RUNNING") {
+      $("deepProgWrap").style.display = "block";
+      $("deepProg").style.width = (s.pct || 0) + "%";
+      $("deepStatus").textContent = "Berjalan " + s.done + "/" + s.total +
+        " · ok " + s.ok + " · gagal " + s.fail + (s.current ? " · sedang: " + s.current : "");
+      if (btn) { btn.disabled = true; btn.textContent = "Deep Scan berjalan (" + (s.pct || 0) + "%)"; }
+      if (!deepPoll) startDeepPoll();
+      return;
+    }
+    clearInterval(deepPoll);
+    deepPoll = null;
+    if (btn) { btn.disabled = false; btn.textContent = "⚡ Deep Scan Top 15 + Broksum"; }
+    $("deepProgWrap").style.display = "none";
+    const c = s.counts || {};
+    $("deepStatus").textContent = s.lastRun
+      ? ("Terakhir: " + new Date(s.lastRun).toLocaleString("id-ID") +
+         " · Akum " + (c.accumulation || 0) + " · Dist " + (c.distribution || 0) + " · Premium " + (c.premium || 0))
+      : "Belum pernah dijalankan.";
+    if (!silent) { loadBandarPulse(); loadRadar(); }
+  } catch (e) { /* diam */ }
+}
+
+// =====================================================================
+// BANDAR LIST
+// =====================================================================
 async function loadBandarPulse() {
   const box = $("bandarPulse");
   try {
-    const data = await api("getBandarPulse", {}, 12000);
-    const acc = data.accumulation || [];
-    const dist = data.distribution || [];
-    if (!acc.length && !dist.length) {
-      box.innerHTML = '<div class="loading-inline">Belum ada data Deep Scan.</div>';
-      return;
-    }
-    let html = "";
-    if (acc.length) {
-      html += `<div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:6px;">Top Akumulasi</div>`;
-      html += acc.map(d => `
-        <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-          <div class="radar-top">
-            <div class="ticker">${d.ticker}</div>
-            <span class="badge badge-${d.grade || 'B'}">${d.grade || '-'}</span>
-          </div>
-          <span class="bandar-tag acc">${d.bandarStatus || 'AKUMULASI'}</span>
-          <div class="meta"><span>TQ <b>${d.tradeQuality ?? '-'}</b></span><span>Net <b>${fmt(d.netBuyLot)}</b></span></div>
-        </div>
-      `).join("");
-    }
-    if (dist.length) {
-      html += `<div style="font-size:11px;color:var(--red);font-weight:700;margin:10px 0 6px;">Top Distribusi</div>`;
-      html += dist.map(d => `
-        <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-          <div class="radar-top">
-            <div class="ticker">${d.ticker}</div>
-            <span class="badge badge-${d.grade || 'C'}">${d.grade || '-'}</span>
-          </div>
-          <span class="bandar-tag dist">${d.bandarStatus || 'DISTRIBUSI'}</span>
-          <div class="meta"><span>TQ <b>${d.tradeQuality ?? '-'}</b></span><span>Net <b>${fmt(d.netBuyLot)}</b></span></div>
-        </div>
-      `).join("");
-    }
-    box.innerHTML = html;
-  } catch {
-    box.innerHTML = '<div class="loading-inline">Gagal memuat Bandar Pulse.</div>';
+    const d = await api("getBandarPulse", {}, 20000);
+    const acc = d.accumulation || [], dist = d.distribution || [];
+    if (!acc.length && !dist.length) { box.innerHTML = '<div class="empty">Belum ada hasil Deep Scan.</div>'; return; }
+    const mini = (arr, label, color) =>
+      '<div style="font-size:10px;font-weight:800;letter-spacing:1px;color:' + color + ';margin:4px 0 6px;">' + label + '</div>' +
+      (arr.length ? arr.map(x =>
+        '<div class="row" style="cursor:pointer;" onclick="openTicker(\'' + esc(x.ticker) + '\')">' +
+          '<span style="color:#e2e8f0;font-weight:700;font-family:\'JetBrains Mono\',monospace;">' + esc(x.ticker) + '</span>' +
+          '<b>' + (x.imbalancePct >= 0 ? "+" : "") + x.imbalancePct + '% · TQ ' + x.tradeQuality + '</b>' +
+        '</div>').join("") : '<div class="loading-inline">—</div>');
+    box.innerHTML = mini(acc, "AKUMULASI", "var(--green)") + mini(dist, "DISTRIBUSI", "var(--red)") +
+      '<div class="disclaimer" style="text-align:left;">Imbalance = (beli − jual) ÷ total lot broker. Diperbarui ' +
+      (d.updatedAt ? new Date(d.updatedAt).toLocaleString("id-ID") : "-") + '.</div>';
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Gagal memuat Bandar Pulse.</div>';
   }
 }
 
-// ================== BANDAR PAGES ==================
-async function loadAccumulation() {
-  const box = $("accumList");
+function loadAccumulation() { loadList("getAccumulation", "accumList"); }
+function loadDistribution() { loadList("getDistribution", "distList"); }
+function loadPremium()      { loadList("getPremiumWatchlist", "premiumList"); }
+
+async function loadList(action, boxId) {
+  const box = $(boxId);
   box.innerHTML = '<div class="loading-inline">Memuat...</div>';
   try {
-    const data = await api("getAccumulation", {}, 12000);
-    renderBandarList(box, data.data || [], "acc");
-  } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    const d = await api(action, {}, 25000);
+    const list = d.data || [];
+    if (!list.length) { box.innerHTML = '<div class="empty">' + esc(d.note || "Belum ada data.") + '</div>'; return; }
+    box.innerHTML = list.map(x => {
+      const cls = statusClass(x.entryStatus);
+      const bcls = String(x.bandarStatus).indexOf("AKUMULASI") === 0 ? "acc"
+                 : String(x.bandarStatus).indexOf("DISTRIBUSI") === 0 ? "dist" : "unknown";
+      return '<div class="bandar-card ' + cls + '" onclick="openTicker(\'' + esc(x.ticker) + '\')">' +
+        '<div class="radar-top">' +
+          '<div class="ticker">' + esc(x.ticker) + '</div>' +
+          '<div style="display:flex;gap:6px;align-items:center;">' +
+            '<span class="badge badge-' + esc(x.grade) + '">' + esc(x.grade) + '</span>' +
+            '<span style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:700;">' + fmt(x.price) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tagrow">' +
+          '<span class="bandar-tag ' + bcls + '">' + esc(x.bandarStatus) + ' ' + (x.imbalancePct >= 0 ? "+" : "") + x.imbalancePct + '%</span>' +
+          '<span class="setup-tag">' + esc(x.entryLabel || x.entryStatus) + '</span>' +
+        '</div>' +
+        '<div style="font-size:11.5px;color:#aab8cc;line-height:1.45;margin-bottom:7px;">' + esc(x.entryReason || "") + '</div>' +
+        '<div class="meta">' +
+          '<span>TQ <b>' + x.tradeQuality + '</b></span>' +
+          '<span>RR <b>' + x.rr1 + '</b></span>' +
+          '<span>Zona <b>' + fmt(x.entryLow) + '-' + fmt(x.entryHigh) + '</b></span>' +
+          '<span>Top5 <b>' + x.top5BuyShare + '%</b></span>' +
+        '</div>' +
+      '</div>';
+    }).join("") +
+    '<div class="disclaimer">Diperbarui: ' + (d.updatedAt ? new Date(d.updatedAt).toLocaleString("id-ID") : "-") + '</div>';
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Gagal memuat data.</div>';
   }
 }
-
-async function loadDistribution() {
-  const box = $("distList");
-  box.innerHTML = '<div class="loading-inline">Memuat...</div>';
-  try {
-    const data = await api("getDistribution", {}, 12000);
-    renderBandarList(box, data.data || [], "dist");
-  } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
-  }
-}
-
-async function loadPremium() {
-  const box = $("premiumList");
-  box.innerHTML = '<div class="loading-inline">Memuat...</div>';
-  try {
-    const data = await api("getPremiumWatchlist", {}, 12000);
-    renderBandarList(box, data.data || [], "prem");
-  } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
-  }
-}
-
-function renderBandarList(box, list, type) {
-  if (!list.length) {
-    box.innerHTML = '<div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div>';
-    return;
-  }
-  box.innerHTML = list.map(d => `
-    <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-      <div class="radar-top">
-        <div class="ticker">${d.ticker}</div>
-        <span class="badge badge-${d.grade || 'C'}">Grade ${d.grade || '-'}</span>
-      </div>
-      <div class="setup-tag">${d.setup || '-'}</div>
-      <span class="bandar-tag ${type === 'dist' ? 'dist' : type === 'acc' ? 'acc' : 'unknown'}">${d.bandarStatus || '-'}</span>
-      <div class="meta">
-        <span>TQ <b>${d.tradeQuality ?? '-'}</b></span>
-        <span>RR <b>${d.plan?.rr1 ?? d.rr ?? '-'}</b></span>
-        <span>${d.sector || ''}</span>
-      </div>
-    </div>
-  `).join("");
-}
-
-// ================== ANALYZE ==================
+  </script>
+  <script>
+// =====================================================================
+// TAB HASIL
+// =====================================================================
 function switchResTab(el) {
   document.querySelectorAll(".res-tab").forEach(t => t.classList.remove("active"));
   document.querySelectorAll(".res-panel").forEach(p => p.classList.remove("active"));
   el.classList.add("active");
-  const panel = $(el.getAttribute("data-panel"));
+  const id = el.getAttribute("data-panel");
+  const panel = $(id);
   if (panel) panel.classList.add("active");
-  if (el.getAttribute("data-panel") === "panelChart" && lastResult) {
-    loadTV(lastResult.ticker);
+  // chart baru digambar saat tab-nya dibuka (container harus punya lebar)
+  if (id === "panelChart" && lastResult) {
+    if (chartDirty) renderChart(lastResult);
+    else setTimeout(() => resizeOne(chart, "chartBox"), 50);
   }
 }
 
-async function analyzeTicker(prefill, usePremium = false, preferDeep = false) {
-  const ticker = (prefill || $("tickerInput").value || "").trim().toUpperCase().replace(".JK", "");
-  if (!ticker) return;
-  if (!session || !session.token) { alert("Session habis."); logout(); return; }
+function gotoTab(panelId) {
+  const el = document.querySelector('.res-tab[data-panel="' + panelId + '"]');
+  if (el) switchResTab(el);
+}
 
-  $("tickerInput").value = ticker;
-  showView("viewResult");
-  $("resTicker").textContent = ticker;
-  $("resSetupLine").textContent = "Menganalisa...";
-  $("resTQ").textContent = "-";
-  $("fakeWarning").style.display = "none";
-  // reset tabs
+function resetTabs() {
   document.querySelectorAll(".res-tab").forEach((t, i) => t.classList.toggle("active", i === 0));
   document.querySelectorAll(".res-panel").forEach((p, i) => p.classList.toggle("active", i === 0));
+}
 
-  if (usePremium && $("btnPremium")) $("btnPremium").textContent = "Memuat Premium...";
-
+// =====================================================================
+// BUKA SAHAM — cache dulu (gratis), baru scan (potong kuota)
+// =====================================================================
+async function openTicker(t) {
+  showView("viewResult");
+  prepResult(t);
   try {
-    let data = null;
-    // Coba cache Deep Scan dulu (hasil penuh + broksum) jika preferDeep / dari list bandar
-    if (preferDeep || (!usePremium && prefill)) {
-      try {
-        const cached = await api("getDeepResult", { ticker }, 12000);
-        if (cached.status === "success" && cached.data) data = cached;
-      } catch (e) {}
-    }
-    if (!data) {
-      data = await api("scan", { ticker, usePremium: !!usePremium }, 35000);
-    }
-    if (data.status !== "success") {
-      $("resSetupLine").textContent = data.message || "Gagal";
-      if (String(data.message || "").toLowerCase().includes("sesi")) logout();
+    const c = await api("getScanCached", { ticker: t }, 25000);
+    if (c.status === "success" && c.data) {
+      renderResult(c.data, c.source === "deepScan" ? "Deep Scan (GOAPI)" : "Cache");
       return;
     }
-    if (data.remaining != null) {
-      session.quota = data.remaining;
-      saveSession(session);
-      $("quotaVal").textContent = data.remaining;
-      $("profQuota").textContent = data.remaining;
+  } catch (e) { /* lanjut scan */ }
+  analyzeTicker(t);
+}
+
+function prepResult(t) {
+  $("resTicker").textContent = String(t || "").toUpperCase().replace(".JK", "");
+  $("resSetupLine").textContent = "Memuat...";
+  $("statusTitle").textContent = "MENGHITUNG";
+  $("statusReason").textContent = "Mengambil data harga dan menghitung level...";
+  $("statusPos").textContent = "-";
+  $("statusTrigger").textContent = "-";
+  $("statusInvalid").textContent = "-";
+  $("statusCard").className = "status-card wait";
+  $("dataModeBox").style.display = "none";
+  $("anaContent").innerHTML = '<div class="empty">Tekan tombol di bawah untuk menyusun analisa.</div>';
+  $("anaSrc").textContent = "";
+  chartDirty = true;
+  resetTabs();
+}
+
+async function analyzeTicker(prefill, usePremium) {
+  const t = (prefill || $("tickerInput").value || "").trim().toUpperCase().replace(".JK", "");
+  if (!t) return toast("Isi kode saham dulu.");
+  showView("viewResult");
+  prepResult(t);
+  try {
+    const d = await api("scan", { ticker: t, usePremium: !!usePremium, force: !!usePremium }, 90000);
+    if (d.status !== "success") {
+      $("statusTitle").textContent = "GAGAL";
+      $("statusCard").className = "status-card avoid";
+      $("statusReason").textContent = d.message || "Tidak bisa menganalisa saham ini.";
+      return;
     }
-    renderResult(data);
-  } catch {
-    $("resSetupLine").textContent = "Gagal terhubung";
-  } finally {
-    if ($("btnPremium")) $("btnPremium").textContent = "⚡ Validasi Premium";
+    renderResult(d.data, d.cached ? "Cache" : (d.dataSource || "Yahoo Finance"));
+    if (!d.cached && d.charged) toast("Kuota terpakai 1. Sisa: " + (d.remaining < 0 ? "∞" : d.remaining));
+  } catch (e) {
+    $("statusTitle").textContent = "TIMEOUT";
+    $("statusCard").className = "status-card avoid";
+    $("statusReason").textContent = "Server tidak merespons tepat waktu. Coba lagi.";
   }
 }
 
-function structLabel(s) {
-  if (!s) return "-";
-  if (s === "HH+HL") return "HH+HL (UPTREND)";
-  if (s === "LH+LL") return "LH+LL (DOWNTREND)";
-  if (s === "BULLISH_MIX") return "BULLISH MIX";
-  if (s === "BEARISH_MIX") return "BEARISH MIX";
-  return s;
-}
+// =====================================================================
+// RENDER HASIL
+// =====================================================================
+function renderResult(d, sourceLabel) {
+  lastResult = d;
+  chatCtx = d.ticker;
+  chartDirty = true;
 
-function renderResult(data) {
-  const t = data.data || {};
-  const ind = t.indicators || {};
-  const plan = t.plan || {};
-  const levels = t.levels || {};
-  const sd = t.scoreDetails || {};
-  lastResult = { ...t, dataSource: data.dataSource };
+  $("resTicker").textContent = d.ticker;
+  $("resSetupLine").textContent = d.setup + " · data " + d.barDate + " · " + d.sector;
 
-  $("resTicker").textContent = t.ticker || data.ticker || "-";
-  $("resTQ").textContent = t.tradeQuality ?? "-";
-  const pct = Math.max(0, Math.min(100, Number(t.tradeQuality) || 0));
-  if ($("resRing")) $("resRing").style.setProperty("--pct", pct);
-  $("resScore").textContent = (t.technicalScore ?? "-") + "/90";
-  $("resPrice").textContent = fmt(ind.price);
-  $("resSource").textContent = data.dataSource || "Yahoo";
-  $("resGrade").textContent = "Grade " + (t.grade || "-");
-  $("resGrade").className = "badge badge-" + (t.grade || "C");
-  $("resSetupTag").textContent = t.setup || "-";
-
-  const bs = t.bandarStatus || "UNKNOWN";
-  const tag = $("resBandarTag");
-  tag.textContent = bs.replace(/_/g, " ");
-  tag.className = "bandar-tag " + (bs.includes("AKUMULASI") ? "acc" : bs === "DISTRIBUSI" ? "dist" : "unknown");
-
-  const st = $("resStatus");
-  if (t.actionable) {
-    st.textContent = "PARAMETER LAYAK DITINJAU";
-    st.className = "status-pill status-now";
-  } else if (t.setup === "NO_SETUP") {
-    st.textContent = "BELUM ADA SETUP JELAS · WAIT & WATCH";
-    st.className = "status-pill status-no";
-  } else {
-    st.textContent = "PERLU KONFIRMASI / GATE · WAIT & WATCH";
-    st.className = "status-pill status-wait";
+  if (d.dataMode === "INTRADAY_PARTIAL") {
+    $("dataModeBox").style.display = "block";
+    $("dataModeBox").textContent = "⚠ Candle hari ini belum tutup. RVOL dipakai versi proyeksi (" +
+      (d.indicators.rvolProjected || "-") + "×) dan breakout belum final. Angka bisa berubah saat closing.";
   }
 
-  if ((t.gateReasons || []).includes("FAKE_BREAKOUT_WARNING")) {
-    $("fakeWarning").style.display = "block";
-    $("fakeWarning").textContent = "⚠ FAKE BREAKOUT WARNING — Distribusi bandar saat breakout. Grade diturunkan.";
-  } else {
-    $("fakeWarning").style.display = "none";
-  }
+  // ---- status entry ----
+  const e = d.entry;
+  $("statusCard").className = "status-card " + statusClass(e.status);
+  $("statusTitle").textContent = e.label;
+  $("statusReason").textContent = e.reason;
+  $("statusPos").textContent = e.positionVsZone;
+  $("statusTrigger").textContent = d.plan.trigger;
+  $("statusInvalid").textContent = d.plan.invalidation;
 
-  // Plan
-  $("resEntry").textContent = fmt(plan.entryLow) + "–" + fmt(plan.entryHigh);
-  $("resTP1").textContent = fmt(plan.tp1);
-  $("resTP2").textContent = fmt(plan.tp2);
-  $("resSL").textContent = fmt(plan.sl);
-  $("resRR").textContent = (plan.rr1 != null ? plan.rr1 + "R" : "-");
-  $("resRiskPct").textContent = (plan.riskPct != null ? plan.riskPct + "%" : "-");
-  $("resTrigger").textContent = plan.trigger || "-";
-  $("resInvalid").textContent = (plan.invalidation || "-") + (plan.sl ? " · SL " + fmt(plan.sl) : "");
-  $("resExit").textContent = plan.exitTrigger || "-";
-  if ($("resEntryStyle")) $("resEntryStyle").textContent = plan.entryStyle || "";
+  // ---- skor + rencana ----
+  $("resTQ").textContent = d.tradeQuality;
+  $("resTQ").style.color = d.tradeQuality >= 75 ? "var(--green)" : d.tradeQuality >= 60 ? "var(--cyan)" : d.tradeQuality >= 52 ? "var(--yellow)" : "var(--red)";
+  $("resGrade").textContent = "GRADE " + d.grade;
+  $("resGrade").className = "badge badge-" + d.grade;
+  $("resSetupTag").textContent = d.setup;
+  const bs = String(d.bandarStatus || "UNKNOWN");
+  $("resBandarTag").textContent = bs;
+  $("resBandarTag").className = "bandar-tag " + (bs.indexOf("AKUMULASI") === 0 ? "acc" : bs.indexOf("DISTRIBUSI") === 0 ? "dist" : "unknown");
+  $("resScore").textContent = d.technicalScore + "/90";
+  $("resPrice").textContent = fmt(d.indicators.price) + " (" + (d.indicators.changePct >= 0 ? "+" : "") + d.indicators.changePct + "%)";
+  $("resSource").textContent = sourceLabel || "-";
 
-  // S/R map
-  $("resCSup").textContent = fmt(levels.classicSupport);
-  $("resCRes").textContent = fmt(levels.classicResistance);
-  $("resDSup").textContent = fmt(levels.dynamicSupport);
-  $("resDRes").textContent = fmt(levels.dynamicResistance);
-  $("resFSup").textContent = fmt(levels.fibSupport);
-  $("resFRes").textContent = fmt(levels.fibResistance);
+  const p = d.plan;
+  $("resEntry").textContent = fmt(p.entryLow) + " — " + fmt(p.entryHigh);
+  $("resAnchor").textContent = "Acuan: " + (e.anchorName || "-");
+  $("resSL").textContent = fmt(p.sl);
+  $("resRiskPct").textContent = "Risiko " + p.riskPct + "% dari entry atas";
+  $("resTP").textContent = "TP1 " + fmt(p.tp1) + "  ·  TP2 " + fmt(p.tp2);
+  $("resTPSrc").textContent = p.tp1Source + (p.tpSynthetic ? " ⚠" : "");
+  $("resRR").textContent = p.rr1;
+  $("resRR").style.color = p.rr1 >= 2 ? "var(--green)" : p.rr1 >= 1.5 ? "var(--cyan)" : "var(--red)";
+  $("resRRNow").textContent = (p.rrNow === null || p.rrNow === undefined) ? "— (harga belum di zona)" : p.rrNow;
 
-  // Confirm checklist
-  const checks = [];
-  checks.push((t.actionable ? "✓" : "○") + " Actionable / gate lolos");
-  checks.push((t.setup && t.setup !== "NO_SETUP" ? "✓" : "○") + " Setup: " + (t.setup || "-"));
-  checks.push((plan.rr1 >= 1.5 ? "✓" : "○") + " RR ≥ 1.5 (" + (plan.rr1 ?? "-") + ")");
-  checks.push((bs.includes("AKUMULASI") ? "✓" : bs === "DISTRIBUSI" ? "✗" : "○") + " Bandar: " + bs.replace(/_/g, " "));
-  checks.push((t.market?.regime === "BULLISH" ? "✓" : "○") + " Market: " + (t.market?.regime || "-"));
-  checks.push("Grade " + (t.grade || "-") + " · TQ " + (t.tradeQuality ?? "-"));
-  $("resConfirm").innerHTML = checks.map(c => {
-    const cls = c.startsWith("✓") ? "ok" : c.startsWith("✗") ? "no" : "";
-    return `<div class="${cls}">${c}</div>`;
-  }).join("");
-
-  // TA context
-  $("resArah").textContent = ind.arahDominan || "-";
-  $("resStruct").textContent = structLabel(ind.structure);
-  $("resEmaPair").textContent = fmt(ind.ema5) + " / " + fmt(ind.ema21);
-  $("resMacd").textContent = (ind.macdState || "-") + (ind.macdHist != null ? " · " + ind.macdHist : "");
-  $("resCross").textContent = ind.crossAlign || "-";
-  $("resRSI").textContent = ind.rsi ?? "-";
-  $("resADX").textContent = ind.adx ?? "-";
-  $("resRvol").textContent = (ind.rvol ?? "-") + "x";
-  $("resRS").textContent = (t.relativeStrength?.vsIHSG20 ?? "-") + "%";
-  $("resSector").textContent = t.sector || "-";
-  $("resRegime").textContent = t.market?.regime || "-";
-
-  // Score breakdown bars
-  const parts = [
-    { name: "Structure HH/HL (20)", val: sd.structure, max: 20 },
-    { name: "EMA / Trend (15)", val: sd.emaTrend, max: 15 },
-    { name: "MACD Momentum (10)", val: sd.macd, max: 10 },
-    { name: "Fibonacci S&R (10)", val: sd.fibonacci, max: 10 },
-    { name: "Classic S&R (10)", val: sd.classicSR, max: 10 },
-    { name: "Dynamic S&R (10)", val: sd.dynamicSR, max: 10 },
-    { name: "Mom + Volume (15)", val: sd.momVolume, max: 15 },
-    { name: "Setup + RR (10)", val: sd.setupRR, max: 10 }
-  ];
-  $("resBreakdown").innerHTML = parts.map(p => {
-    const v = Number(p.val) || 0;
-    const w = Math.round((v / p.max) * 100);
-    return `<div class="breakdown-row"><span style="min-width:130px;color:var(--muted)">${p.name}</span><div class="bar"><i style="width:${w}%"></i></div><b style="min-width:28px;text-align:right">${v}</b></div>`;
-  }).join("");
-
-  // Smart money
-  $("resBandarStatus").textContent = bs.replace(/_/g, " ");
-  $("resBandarScore").textContent = t.bandarScore ?? "-";
-  $("resNetBuy").textContent = fmt(t.netBuyLot);
-  const buyers = (t.topBuyers || []).map(b => b.code + " (+" + fmt(b.net) + ")").join(", ");
-  const sellers = (t.topSellers || []).map(b => b.code + " (-" + fmt(b.net) + ")").join(", ");
-  $("resTopBrokers").textContent = (buyers ? "Top Buy: " + buyers : "Top Buy: -") + "\n" + (sellers ? "Top Sell: " + sellers : "Top Sell: -");
-
-  $("resSetupLine").textContent = (t.setup || "-") + (data.dataSource ? " · " + data.dataSource : "");
-
-  if (session && session.role === "ADMIN") {
-    $("adminPanel").style.display = "grid";
-    const isPremiumSrc = (data.dataSource || "").includes("GOAPI") || (data.dataSource || "").includes("Deep");
-    $("btnPremium").style.display = isPremiumSrc ? "none" : "block";
-  } else {
-    $("adminPanel").style.display = "none";
-  }
-
+  renderSrGrid(d);
+  renderConfirm(d);
+  renderGates(d);
+  renderTA(d);
+  renderSmartMoney(d);
   calcLot();
-  // Chart di-load saat tab Chart dibuka (hemat)
 }
 
-// ================== POSITION SIZE ==================
+// ---- Support / Resistance (grid + klaster) ----
+function renderSrGrid(d) {
+  const k = d.keyLevels || {};
+  $("resNSup").textContent = fmt(k.nearestSupport);
+  $("resNRes").textContent = fmt(k.nearestResistance);
+  $("resSwL").textContent  = fmt(k.swingLow);
+  $("resSwH").textContent  = fmt(k.swingHigh);
+  $("resDSup").textContent = fmt(k.dynamicSupport);
+  $("resDRes").textContent = fmt(k.dynamicResistance);
+  $("resFSup").textContent = fmt(k.fibSupport);
+  $("resFRes").textContent = fmt(k.fibResistance);
+
+  const levels = d.levels || [];
+  if (levels.length) {
+    $("resLevelsList").innerHTML = "<b style='color:#e2e8f0'>Klaster level:</b> " +
+      levels.slice(0, 10).map(l => {
+        const c = l.type === "SUPPORT" ? "var(--green)" : l.type === "RESISTANCE" ? "#ff8aa8" : "var(--yellow)";
+        return '<span style="color:' + c + '">' + fmt(l.price) + '</span> (' + esc(l.type) +
+               ', s' + l.strength + ', ' + (l.distPct >= 0 ? "+" : "") + l.distPct + '%)';
+      }).join(" · ");
+  } else {
+    $("resLevelsList").textContent = "Tidak ada klaster level yang cukup kuat.";
+  }
+}
+
+// ---- Konfirmasi ----
+function renderConfirm(d) {
+  const es = d.entry.status;
+  const bs = String(d.bandarStatus || "UNKNOWN");
+  const rr = d.plan.rr1;
+  const mk = (d.market && d.market.regime) || "-";
+
+  const rows = [
+    [es === "BUY_ZONE" ? "ok" : "wait", "Entry: " + (d.entry.label || es)],
+    [d.setup !== "NO_SETUP" ? "ok" : "wait", "Setup: " + d.setup],
+    [rr >= 1.5 ? "ok" : "no", "RR ≥ 1.5 (" + rr + ")"],
+    [bs.indexOf("AKUMULASI") === 0 ? "ok" : bs.indexOf("DISTRIBUSI") === 0 ? "no" : "wait", "Bandar: " + bs.replace(/_/g, " ")],
+    [mk === "BULLISH" ? "ok" : mk === "BEARISH" ? "no" : "wait", "Market: " + mk],
+    [d.liquidity.avgTurnover20 >= 1e9 ? "ok" : "no", "Likuiditas: " + fmtRp(d.liquidity.avgTurnover20) + "/hari"]
+  ];
+
+  $("resConfirm").innerHTML = rows.map(r => {
+    const sym = r[0] === "ok" ? "✓" : r[0] === "no" ? "✗" : "○";
+    const cls = r[0] === "ok" ? "ok" : r[0] === "no" ? "no" : "";
+    return '<div class="' + cls + '">' + sym + " " + esc(r[1]) + '</div>';
+  }).join("") +
+  '<div class="last">Grade ' + esc(d.grade) + " · TQ " + d.tradeQuality + '</div>';
+}
+
+// ---- Gate ----
+function renderGates(d) {
+  const gates = d.gates || [];
+  if (!gates.length) {
+    $("gateCount").textContent = "(0)";
+    $("gateList").innerHTML = '<div class="gate-item"><span class="gate-code clear">CLEAR</span>' +
+      '<span class="gate-text">Tidak ada gate yang menyala.</span></div>';
+    return;
+  }
+  const soft = { TP_SYNTHETIC: 1, DATA_PARTIAL: 1, RSI_EXTREME: 1 };
+  $("gateCount").textContent = "(" + gates.length + ")";
+  $("gateList").innerHTML = gates.map(g =>
+    '<div class="gate-item">' +
+      '<span class="gate-code' + (soft[g.code] ? " soft" : "") + '">' + esc(g.code) + '</span>' +
+      '<span class="gate-text">' + esc(g.text) + '</span>' +
+    '</div>').join("");
+}
+
+// ---- TA panel ----
+function renderTA(d) {
+  const i = d.indicators;
+  $("resArah").textContent = i.arahDominan;
+  $("resStruct").textContent = i.structure;
+  $("resCross").textContent = i.crossAlign;
+  $("resEMA").textContent = fmt(i.ema21) + " / " + fmt(i.ema50) + " / " + fmt(i.ema99);
+  $("resMACD").textContent = i.macdState;
+  $("resRSI").textContent = i.rsi;
+  $("resADX").textContent = i.adx + (i.adx >= 25 ? " (tren kuat)" : i.adx >= 18 ? " (sedang)" : " (lemah)");
+  $("resATR").textContent = i.atr + " (" + i.atrPct + "%)";
+  $("resRvol").textContent = i.rvol + "×" + (i.rvolProjected ? " (proy " + i.rvolProjected + "×)" : "");
+  $("resRS").textContent = (d.relativeStrength.vsIHSG20 >= 0 ? "+" : "") + d.relativeStrength.vsIHSG20 + "%";
+  $("resRS").style.color = d.relativeStrength.vsIHSG20 >= 0 ? "var(--green)" : "var(--red)";
+  $("resLiq").textContent = fmtRp(d.liquidity.avgTurnover20);
+  $("resSector").textContent = d.sector;
+  $("resRegime").textContent = d.market.regime;
+
+  const sd = d.scoreDetails;
+  const parts = [
+    ["Struktur (HH/HL)", sd.structure, 20],
+    ["Tren EMA", sd.emaTrend, 15],
+    ["MACD / momentum", sd.macd, 10],
+    ["Fibonacci", sd.fibonacci, 10],
+    ["Lokasi vs S/R", sd.location, 10],
+    ["S/R dinamis (EMA)", sd.dynamicSR, 10],
+    ["Volume", sd.momVolume, 15]
+  ];
+  $("scoreBreak").innerHTML = parts.map(x =>
+    '<div class="bd">' +
+      '<div class="bd-name">' + x[0] + '</div>' +
+      '<div class="bd-bar"><i style="width:' + Math.round((x[1] / x[2]) * 100) + '%"></i></div>' +
+      '<div class="bd-val">' + x[1] + '/' + x[2] + '</div>' +
+    '</div>').join("");
+}
+
+// ---- Smart money panel ----
+function renderSmartMoney(d) {
+  const b = d.bandar || {};
+  const box = $("broksumInner");
+  if (!b.status || b.status === "UNKNOWN") {
+    box.innerHTML = '<div class="empty">Broker summary belum tersedia untuk saham ini.<br>' +
+      'Jalankan Deep Scan (Admin) atau Validasi Premium agar data GOAPI terambil.</div>';
+    return;
+  }
+  const buy = (b.topBuyers || []).map(x => x.code + " +" + fmt(x.net)).join(" · ") || "-";
+  const sell = (b.topSellers || []).map(x => x.code + " −" + fmt(x.net)).join(" · ") || "-";
+  box.innerHTML =
+    '<div class="row"><span>Status</span><b style="color:' +
+      (String(b.status).indexOf("AKUMULASI") === 0 ? "var(--green)" : String(b.status).indexOf("DISTRIBUSI") === 0 ? "var(--red)" : "var(--muted)") +
+      '">' + esc(b.status) + '</b></div>' +
+    '<div class="row"><span>Imbalance (beli−jual)</span><b style="color:' + (b.imbalancePct >= 0 ? "var(--green)" : "var(--red)") + '">' +
+      (b.imbalancePct >= 0 ? "+" : "") + b.imbalancePct + '%</b></div>' +
+    '<div class="row"><span>Net lot</span><b>' + fmt(b.netLot) + ' (' + b.netPct + '% vol harian)</b></div>' +
+    '<div class="row"><span>Top-5 pembeli</span><b>' + b.top5BuyShare + '% sisi beli</b></div>' +
+    '<div class="row"><span>Skor bandar</span><b>' + b.score + '/100</b></div>' +
+    '<div class="row"><span>Tanggal data</span><b>' + esc(b.date || "-") + '</b></div>' +
+    '<div style="margin-top:12px;font-size:11.5px;line-height:1.7;color:var(--muted);">' +
+      '<b style="color:var(--green)">Top beli:</b> ' + esc(buy) + '<br>' +
+      '<b style="color:var(--red)">Top jual:</b> ' + esc(sell) + '</div>' +
+    '<div class="disclaimer" style="text-align:left;">Ambang akumulasi/distribusi memakai persentase imbalance, bukan lot absolut — jadi saham kecil dan besar dinilai adil.</div>';
+}
+
+// =====================================================================
+// CHART SAHAM (digambar saat tab Chart dibuka)
+// =====================================================================
+function renderChart(d) {
+  const box = $("chartBox");
+  if (!window.LightweightCharts) {
+    box.innerHTML = '<div class="empty">Library chart gagal dimuat. Cek koneksi ke unpkg.com.</div>';
+    return;
+  }
+  const bars = (d.chart && d.chart.bars) || [];
+  if (!bars.length) { box.innerHTML = '<div class="empty">Data chart tidak tersedia.</div>'; return; }
+
+  if (chart) { try { chart.remove(); } catch (err) {} chart = null; }
+  box.innerHTML = "";
+
+  chart = LightweightCharts.createChart(box, {
+    width: box.clientWidth || 340,
+    height: 300,
+    layout: { background: { color: "#070b14" }, textColor: "#8b9bb4", fontSize: 10 },
+    grid: { vertLines: { color: "rgba(255,255,255,0.035)" }, horzLines: { color: "rgba(255,255,255,0.035)" } },
+    rightPriceScale: { borderColor: "rgba(255,255,255,0.08)", scaleMargins: { top: 0.12, bottom: 0.24 } },
+    timeScale: { borderColor: "rgba(255,255,255,0.08)", rightOffset: 6 },
+    handleScale: { axisPressedMouseMove: false },
+    crosshair: { mode: 0 }
+  });
+
+  candleSeries = chart.addCandlestickSeries({
+    upColor: "#00ff9d", downColor: "#ff2a5f",
+    borderUpColor: "#00ff9d", borderDownColor: "#ff2a5f",
+    wickUpColor: "rgba(0,255,157,0.7)", wickDownColor: "rgba(255,42,95,0.7)"
+  });
+  candleSeries.setData(bars.map(b => ({ time: b.t, open: b.o, high: b.h, low: b.l, close: b.c })));
+
+  volSeries = chart.addHistogramSeries({ priceFormat: { type: "volume" }, priceScaleId: "" });
+  volSeries.priceScale().applyOptions({ scaleMargins: { top: 0.84, bottom: 0 } });
+  volSeries.setData(bars.map(b => ({
+    time: b.t, value: b.v,
+    color: b.c >= b.o ? "rgba(0,255,157,0.25)" : "rgba(255,42,95,0.25)"
+  })));
+
+  const line = (price, color, title, style) => {
+    if (!price || isNaN(price)) return;
+    candleSeries.createPriceLine({
+      price: Number(price), color: color, lineWidth: 1,
+      lineStyle: style === undefined ? 2 : style, axisLabelVisible: true, title: title
+    });
+  };
+  (d.levels || []).slice(0, 6).forEach(x =>
+    line(x.price, "rgba(139,155,180,0.5)", (x.type === "SUPPORT" ? "S" : "R") + " " + x.touches + "×", 3));
+  const p = d.plan;
+  line(p.entryLow, "#00e5ff", "Entry ↓", 2);
+  line(p.entryHigh, "#00e5ff", "Entry ↑", 2);
+  line(p.sl, "#ff2a5f", "SL", 0);
+  line(p.tp1, "#00ff9d", "TP1", 0);
+  line(p.tp2, "rgba(0,255,157,0.6)", "TP2", 2);
+
+  chart.timeScale().fitContent();
+  chartDirty = false;
+}
+
+// =====================================================================
+// ANALISA TELITI
+// =====================================================================
+async function loadAnalisa(refresh) {
+  if (!lastResult) return toast("Buka analisa saham dulu.");
+  const btn = $("btnAnalisa");
+  btn.disabled = true;
+  btn.textContent = "Menyusun...";
+  $("anaContent").innerHTML = '<div class="loading-inline">Menyusun analisa...</div>';
+  try {
+    const d = await api("analyze", { ticker: lastResult.ticker, refresh: !!refresh }, 90000);
+    if (d.status !== "success") {
+      $("anaContent").innerHTML = '<div class="empty">' + esc(d.message || "Gagal menyusun analisa.") + '</div>';
+      return;
+    }
+    renderAnalisa(d.narrative, d.cached);
+  } catch (e) {
+    $("anaContent").innerHTML = '<div class="empty">Timeout saat menyusun analisa.</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "↻ Susun Ulang";
+    btn.setAttribute("onclick", "loadAnalisa(true)");
+  }
+}
+
+function renderAnalisa(n, cached) {
+  const blocks = [
+    ["Ringkasan", n.ringkasan],
+    ["Kondisi Tren", n.kondisiTren],
+    ["Kenapa Setup Ini Valid / Tidak", n.setupValid],
+    ["Level Kunci", n.levelKunci],
+    ["Kondisi Batal", n.kondisiBatal],
+    ["Risiko", n.risiko],
+    ["Catatan", n.catatan]
+  ].filter(b => b[1]);
+
+  let html = blocks.map(b =>
+    '<div class="ana-block"><h4>' + esc(b[0]) + '</h4><p>' + esc(b[1]) + '</p></div>').join("");
+
+  if (n.checklist && n.checklist.length) {
+    html += '<div class="ana-block"><h4>Checklist</h4><div class="confirm-list">' +
+      n.checklist.map(c => '<div class="' + (c.ok ? "ok" : "no") + '">' + (c.ok ? "✓" : "✗") + " " +
+        esc(c.label) + ' <span style="color:var(--muted)">· ' + esc(c.note) + '</span></div>').join("") +
+      '</div></div>';
+  }
+  if (n.aiError) {
+    html += '<div class="disclaimer" style="text-align:left;color:var(--yellow);">AI tidak dipakai: ' +
+      esc(n.aiError) + ' — narasi di atas dari mesin aturan.</div>';
+  }
+  $("anaContent").innerHTML = html;
+  $("anaSrc").textContent = (n.source === "ai+rules" ? "AI + aturan" : "mesin aturan") + (cached ? " · cache" : "");
+}
+
+// =====================================================================
+// POSITION SIZE
+// =====================================================================
 function setRisk(r, el) {
   currentRisk = r;
   document.querySelectorAll(".risk-btn").forEach(b => b.classList.remove("active"));
@@ -1182,203 +1553,216 @@ function setRisk(r, el) {
 }
 
 function calcLot() {
-  if (!lastResult || !lastResult.plan) {
+  if (!lastResult) return;
+  const cap = Number($("capitalInput").value || 0);
+  const entry = lastResult.plan.entryHigh;
+  const sl = lastResult.plan.sl;
+  const riskShare = entry - sl;
+  if (!cap || riskShare <= 0) {
     $("resLot").textContent = "-";
+    $("resRiskShare").textContent = "-";
+    $("resPosVal").textContent = "-";
     return;
   }
-  const plan = lastResult.plan;
-  const capital = Number($("capitalInput").value) || 0;
-  const entry = Number(plan.entryHigh) || Number(plan.entryLow) || 0;
-  const sl = Number(plan.sl) || 0;
-  if (!capital || !entry || !sl || entry <= sl) {
-    $("resLot").textContent = "-";
-    return;
-  }
-  const riskCash = capital * (currentRisk / 100);
-  const lossPerLot = (entry - sl) * 100;
-  const lots = Math.floor(riskCash / lossPerLot);
-  $("resLot").textContent = lots > 0 ? lots + " lot (" + (lots * 100).toLocaleString("id-ID") + " lh)" : "Modal/risiko terlalu kecil";
+  const lot = Math.floor((cap * (currentRisk / 100)) / (riskShare * 100));
+  $("resRiskShare").textContent = "Rp" + fmt(Math.round(riskShare));
+  $("resLot").textContent = lot > 0 ? fmt(lot) + " lot" : "modal terlalu kecil";
+  $("resPosVal").textContent = lot > 0 ? fmtRp(lot * 100 * entry) : "-";
 }
-$("capitalInput") && $("capitalInput").addEventListener("input", calcLot);
 
-// ================== PAPER WATCH ==================
 async function addToPaperWatch() {
   if (!lastResult) return;
+  const d = lastResult;
   try {
-    const data = await api("addWatch", {
-      ticker: lastResult.ticker,
-      setup: lastResult.setup,
-      entryLow: lastResult.plan?.entryLow,
-      entryHigh: lastResult.plan?.entryHigh,
-      sl: lastResult.plan?.sl,
-      tp1: lastResult.plan?.tp1,
-      grade: lastResult.grade
-    });
-    alert(data.message || (data.status === "success" ? "Ditambahkan." : "Gagal."));
-  } catch {
-    alert("Gagal menambah ke watchlist.");
+    const r = await api("addWatch", {
+      ticker: d.ticker, setup: d.setup, entryStatus: d.entry.status,
+      entryLow: d.plan.entryLow, entryHigh: d.plan.entryHigh,
+      sl: d.plan.sl, tp1: d.plan.tp1, rr: d.plan.rr1, grade: d.grade
+    }, 20000);
+    toast(r.message || "Tersimpan.");
+  } catch (e) { toast("Gagal menyimpan."); }
+}
+
+// =====================================================================
+// CHAT
+// =====================================================================
+function openChat() {
+  const wrap = $("chatCtxWrap");
+  if (chatCtx) {
+    wrap.innerHTML = '<div class="ctx-chip">Konteks: ' + esc(chatCtx) + ' <button onclick="clearChatCtx()">✕</button></div>';
+  } else {
+    wrap.innerHTML = '<div class="disclaimer" style="text-align:left;margin:0 0 8px;">Belum ada konteks saham. Buka analisa sebuah saham dulu supaya jawaban AI memakai angka yang benar.</div>';
   }
+}
+function clearChatCtx() { chatCtx = null; openChat(); }
+
+function addBubble(text, cls) {
+  const log = $("chatLog");
+  const div = document.createElement("div");
+  div.className = "bubble " + cls;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+
+async function sendChat() {
+  const input = $("chatInput");
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = "";
+  addBubble(msg, "user");
+  const thinking = addBubble("...", "bot");
+  try {
+    const d = await api("chat", { message: msg, ticker: chatCtx || "" }, 60000);
+    if (d.status !== "success") {
+      thinking.className = "bubble err";
+      thinking.textContent = d.message || "AI tidak merespons.";
+      if (d.detail && d.detail.modelDicoba && d.detail.modelDicoba.length) {
+        thinking.textContent += "\n\nModel yang dicoba: " + d.detail.modelDicoba.join(", ");
+      }
+      return;
+    }
+    thinking.textContent = d.reply;
+    if (d.chatLimit > 0) $("chatQuotaLbl").textContent = d.chatUsed + "/" + d.chatLimit + " hari ini";
+  } catch (e) {
+    thinking.className = "bubble err";
+    thinking.textContent = "Koneksi timeout.";
+  }
+}
+
+// =====================================================================
+// OUTLOOK
+// =====================================================================
+async function loadFullOutlook(refresh) {
+  showView("viewOutlook");
+  const box = $("outlookBox");
+  box.innerHTML = '<div class="glass"><div class="loading-inline">Memuat outlook...</div></div>';
+  try {
+    const d = await api("getMarketOutlook", { refresh: !!refresh }, 90000);
+    if (d.status !== "success") {
+      box.innerHTML = '<div class="glass"><div class="empty">' + esc(d.message || "Gagal.") + '</div></div>';
+      return;
+    }
+    const o = d.data;
+    let html = "";
+    if (o && o.ringkasan) {
+      const bias = String(o.bias || "NETRAL").toUpperCase();
+      html += '<div class="glass"><span class="bias-pill bias-' + esc(bias) + '">BIAS ' + esc(bias) + '</span>' +
+        '<div class="ana-block"><p>' + esc(o.ringkasan) + '</p></div>';
+      if (o.level) {
+        html += '<div class="row"><span>Support</span><b>' + fmt(o.level.support) + '</b></div>' +
+                '<div class="row"><span>Resistance</span><b>' + fmt(o.level.resistance) + '</b></div>' +
+                (o.level.catatan ? '<div class="plan-desc" style="margin-top:8px;">' + esc(o.level.catatan) + '</div>' : "");
+      }
+      html += '</div>';
+      if (o.breadth || o.sektor) {
+        html += '<div class="glass">' +
+          (o.breadth ? '<div class="ana-block"><h4>Breadth</h4><p>' + esc(o.breadth) + '</p></div>' : "") +
+          (o.sektor ? '<div class="ana-block"><h4>Sektor</h4><p>' + esc(o.sektor) + '</p></div>' : "") + '</div>';
+      }
+      if (o.skenarioA || o.skenarioB) {
+        html += '<div class="glass"><div class="section-label"><span class="grad">●</span> Skenario</div>';
+        [o.skenarioA, o.skenarioB].forEach((s, idx) => {
+          if (!s) return;
+          html += '<div class="scn"><h5>' + (idx === 0 ? "A" : "B") + ". " + esc(s.judul || "-") + '</h5>' +
+            '<p><b style="color:#cbd5e1;">Syarat:</b> ' + esc(s.syarat || "-") + '<br>' +
+            '<b style="color:#cbd5e1;">Implikasi:</b> ' + esc(s.implikasi || "-") + '</p></div>';
+        });
+        html += '</div>';
+      }
+      if (o.implikasiTrading) {
+        html += '<div class="glass"><div class="ana-block"><h4>Implikasi Trading</h4><p>' + esc(o.implikasiTrading) + '</p></div></div>';
+      }
+    } else {
+      html = '<div class="glass"><div style="font-size:13px;line-height:1.7;white-space:pre-wrap;color:#d7e0ee;">' +
+        esc(d.outlook || "-") + '</div></div>';
+    }
+    box.innerHTML = html;
+    $("outlookMeta").textContent = "Sumber: " + esc(d.source || "-") + (d.cached ? " · dari cache" : " · baru dihitung");
+  } catch (e) {
+    box.innerHTML = '<div class="glass"><div class="empty">Timeout memuat outlook.</div></div>';
+  }
+}
+
+// =====================================================================
+// PROFIL
+// =====================================================================
+async function loadProfile() {
+  loadMyWatch();
+  try {
+    const m = await api("me", {}, 15000);
+    if (m.status === "success") {
+      $("profUser").textContent = m.username;
+      $("profRole").textContent = m.role;
+      setQuota(m.quota);
+    }
+  } catch (e) {}
 }
 
 async function loadMyWatch() {
   const box = $("myWatchList");
   try {
-    const data = await api("getMyWatchlist", {}, 12000);
-    const list = data.data || [];
-    if (!list.length) {
-      box.innerHTML = '<div class="empty">Belum ada setup yang dipantau.</div>';
-      return;
-    }
-    box.innerHTML = list.map(d => `
-      <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-        <div class="radar-top">
-          <div class="ticker">${d.ticker}</div>
-          <span class="badge badge-${d.grade || 'C'}">${d.grade || '-'}</span>
-        </div>
-        <div class="setup-tag">${d.setup || '-'}</div>
-        <div class="meta">
-          <span>Entry <b>${fmt(d.entryLow)}-${fmt(d.entryHigh)}</b></span>
-          <span>SL <b>${fmt(d.sl)}</b></span>
-        </div>
-      </div>
-    `).join("");
-  } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    const d = await api("getMyWatchlist", {}, 20000);
+    const list = (d.data || []).filter(x => x.status === "WATCHING");
+    if (!list.length) { box.innerHTML = '<div class="empty">Belum ada setup yang dipantau.</div>'; return; }
+    box.innerHTML = list.reverse().map(x =>
+      '<div class="bandar-card" onclick="openTicker(\'' + esc(x.ticker) + '\')">' +
+        '<div class="radar-top"><div class="ticker">' + esc(x.ticker) + '</div>' +
+        '<span class="badge badge-' + esc(x.grade || "D") + '">' + esc(x.grade || "-") + '</span></div>' +
+        '<div class="meta">' +
+          '<span>Zona <b>' + fmt(x.entryLow) + '-' + fmt(x.entryHigh) + '</b></span>' +
+          '<span>SL <b>' + fmt(x.sl) + '</b></span>' +
+          '<span>TP1 <b>' + fmt(x.tp1) + '</b></span>' +
+          '<span>RR <b>' + esc(x.rr) + '</b></span>' +
+        '</div>' +
+        '<div style="font-size:10px;color:#475569;margin-top:6px;">' + esc(x.setup) + ' · ' +
+        (x.addedAt ? new Date(x.addedAt).toLocaleDateString("id-ID") : "-") + '</div>' +
+      '</div>').join("");
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Gagal memuat watchlist.</div>';
   }
 }
 
-// ================== CHAT ==================
-async function sendChat() {
-  const input = $("chatInput");
-  const msg = (input.value || "").trim();
-  if (!msg) return;
-  if (!session || !session.token) { logout(); return; }
-  const log = $("chatLog");
-  log.innerHTML += `<div class="bubble user">${msg.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</div>`;
-  input.value = "";
-  log.scrollTop = log.scrollHeight;
-  const pending = document.createElement("div");
-  pending.className = "bubble bot";
-  pending.textContent = "Mengetik...";
-  log.appendChild(pending);
-  log.scrollTop = log.scrollHeight;
+async function loadDiag() {
+  const out = $("diagOut");
+  out.textContent = "Mengecek...";
   try {
-    const data = await api("chat", { message: msg }, 25000);
-    pending.textContent = data.reply || data.message || "-";
-  } catch {
-    pending.textContent = "Koneksi gagal.";
-  }
-  log.scrollTop = log.scrollHeight;
-}
-
-
-// ================== IHSG + OUTLOOK + SECTOR ==================
-async function loadIHSG() {
-  try {
-    const data = await api("getIHSG", {}, 15000);
-    if (data.status !== "success") {
-      $("ihsgMiniOutlook").textContent = data.message || "Gagal memuat IHSG.";
-      return;
-    }
-    $("ihsgPrice").textContent = fmt(data.price);
-    const ch = data.changePct;
-    const chEl = $("ihsgChange");
-    chEl.textContent = (ch > 0 ? "+" : "") + ch + "%";
-    chEl.style.color = ch > 0 ? "var(--green)" : ch < 0 ? "var(--red)" : "var(--muted)";
-    $("ihsgRegime").textContent = data.regime || "-";
-    $("ihsgAdx").textContent = data.adx ?? "-";
-    $("ihsgRsi").textContent = data.rsi ?? "-";
-    const br = data.breadth || {};
-    $("ihsgBreadth").textContent = br.aboveEma21Pct != null ? br.aboveEma21Pct + "%" : "-";
-    $("ihsgMiniOutlook").textContent =
-      "Regime " + (data.regime || "-") +
-      " · Support " + fmt(data.support) +
-      " · Resistance " + fmt(data.resistance) +
-      (br.sampleSize ? " · Breadth sample " + br.sampleSize + " saham" : "");
-  } catch {
-    $("ihsgMiniOutlook").textContent = "Gagal memuat IHSG.";
+    const d = await api("diagnostics", {}, 30000);
+    if (d.status !== "success") { out.textContent = d.message; return; }
+    const p = d.properties, err = d.lastErrors;
+    out.textContent =
+      "Versi      : " + d.version + "\n" +
+      "Sheet      : " + p.sheetId + "\n" +
+      "HMAC       : " + p.hmac + "\n" +
+      "GOAPI key  : " + p.goapiKey + " (" + p.goapiBase + ")\n" +
+      "Gemini key : " + p.geminiKey + "\n" +
+      "Model aktif: " + p.geminiModelActive + "\n" +
+      "Watchlist  : " + d.watchlistSize + " ticker\n" +
+      "Radar      : " + (d.radar ? d.radar.count + " kartu · " + new Date(d.radar.updatedAt).toLocaleString("id-ID") : "kosong") + "\n" +
+      "Lock EOD   : " + (d.locks.EOD.held ? d.locks.EOD.ageMin + " menit" : "bebas") + "\n" +
+      "Lock DEEP  : " + (d.locks.DEEP.held ? d.locks.DEEP.ageMin + " menit" : "bebas") + "\n" +
+      "Trigger    : " + (d.triggers || []).join(", ") + "\n" +
+      "Error AI   : " + String(err.gemini).slice(0, 180) + "\n" +
+      "Error GOAPI: " + String(err.goapi).slice(0, 180);
+  } catch (e) {
+    out.textContent = "Gagal menjalankan diagnostik.";
   }
 }
 
-async function loadFullOutlook() {
-  showView("viewOutlook");
-  $("fullOutlook").textContent = "Memuat outlook lengkap (bisa 10–20 detik)...";
-  try {
-    const data = await api("getMarketOutlook", {}, 60000);
-    if (data.status === "success") {
-      $("fullOutlook").textContent = data.outlook || JSON.stringify(data, null, 2);
-    } else {
-      $("fullOutlook").textContent = data.message || "Gagal memuat outlook.";
-    }
-  } catch {
-    $("fullOutlook").textContent = "Gagal terhubung.";
+// =====================================================================
+// INIT
+// =====================================================================
+window.addEventListener("load", () => {
+  setTimeout(() => $("splash").classList.add("hide"), 1900);
+  const s = loadSession();
+  if (s && s.token) {
+    session = s;
+    setTimeout(enterApp, 1950);
+  } else {
+    setTimeout(() => $("authView").classList.add("show"), 1950);
   }
-}
-
-async function loadSectorStrength() {
-  const box = $("sectorBox");
-  try {
-    const data = await api("getSectorStrength", {}, 12000);
-    const d = data.data || {};
-    const keys = Object.keys(d);
-    if (!keys.length) {
-      box.innerHTML = '<div class="loading-inline">Belum ada data sektor (jalankan EOD Scan).</div>';
-      return;
-    }
-    const sorted = keys.map(k => ({ name: k, ...d[k] })).sort((a, b) => (b.strength || 0) - (a.strength || 0));
-    box.innerHTML = sorted.map(s => {
-      const color = (s.strength || 0) >= 65 ? "var(--green)" : (s.strength || 0) >= 50 ? "var(--yellow)" : "var(--red)";
-      return `<div class="row"><span>${s.name}</span><b style="color:${color}">${s.strength ?? "-"}</b></div>`;
-    }).join("");
-  } catch {
-    box.innerHTML = '<div class="loading-inline">Gagal memuat sektor.</div>';
-  }
-}
-
-function loadTV(ticker) {
-  const el = $("tvChart");
-  if (!el) return;
-  el.innerHTML = "";
-  if (!ticker) return;
-  const s = document.createElement("script");
-  s.src = "https://s3.tradingview.com/tv.js";
-  s.onload = () => {
-    try {
-      new TradingView.widget({
-        container_id: "tvChart",
-        symbol: "IDX:" + ticker,
-        interval: "D",
-        timezone: "Asia/Jakarta",
-        theme: "dark",
-        style: "1",
-        locale: "id",
-        toolbar_bg: "#03050a",
-        enable_publishing: false,
-        hide_top_toolbar: false,
-        allow_symbol_change: true,
-        width: "100%",
-        height: 320
-      });
-    } catch (e) {}
-  };
-  el.appendChild(s);
-}
-
-
-// ================== INIT ==================
-window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    $("splash").classList.add("hide");
-    const s = loadSession();
-    if (s && s.token) {
-      session = s;
-      enterApp();
-    } else {
-      $("authView").classList.add("show");
-      switchAuth("login");
-    }
-  }, 2100);
 });
-</script>
+  </script>
 </body>
 </html>
