@@ -293,6 +293,29 @@
           <div class="quota-pill">Kuota: <span id="quotaVal">-</span></div>
         </div>
 
+        <!-- IHSG SNAPSHOT -->
+        <div class="glass">
+          <div class="section-label"><span class="grad">●</span> IHSG Market Snapshot</div>
+          <div class="metric-grid">
+            <div class="metric"><span>IHSG</span><b id="ihsgPrice">-</b></div>
+            <div class="metric"><span>Perubahan</span><b id="ihsgChange">-</b></div>
+            <div class="metric"><span>Regime</span><b id="ihsgRegime">-</b></div>
+            <div class="metric"><span>ADX</span><b id="ihsgAdx">-</b></div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><span>Breadth > EMA21</span><b id="ihsgBreadth">-</b></div>
+            <div class="metric"><span>RSI</span><b id="ihsgRsi">-</b></div>
+          </div>
+          <div id="ihsgMiniOutlook" style="font-size:12px;color:#cbd5e1;line-height:1.55;margin:8px 0 12px;">Memuat data IHSG...</div>
+          <button class="btn-ghost" onclick="loadFullOutlook()">Lihat Outlook Lengkap</button>
+        </div>
+
+        <!-- SECTOR STRENGTH -->
+        <div class="glass">
+          <div class="section-label"><span class="grad">●</span> Kekuatan Sektor</div>
+          <div id="sectorBox"><div class="loading-inline">Memuat sektor...</div></div>
+        </div>
+
         <div class="glass">
           <div class="section-label"><span class="grad">●</span> Analisa Cepat</div>
           <div class="search-box">
@@ -320,7 +343,18 @@
         </div>
       </div>
 
-      <!-- RESULT -->
+      <!-- OUTLOOK FULL -->
+      <div id="viewOutlook" class="view">
+        <div class="top-row">
+          <div style="font-weight:800;font-size:16px;">IHSG Market Outlook</div>
+          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+        </div>
+        <div class="glass">
+          <div id="fullOutlook" style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:#d7e0ee;">Memuat outlook...</div>
+        </div>
+      </div>
+
+<!-- RESULT -->
       <div id="viewResult" class="view">
         <div class="top-row">
           <div>
@@ -389,6 +423,11 @@
           <div class="row"><span>Status</span><b id="resBandarStatus">-</b></div>
           <div class="row"><span>Net Buy (lot)</span><b id="resNetBuy">-</b></div>
           <div style="margin-top:8px;font-size:11px;color:var(--muted);" id="resTopBrokers">-</div>
+        </div>
+
+        <div class="glass">
+          <div class="section-label">Chart</div>
+          <div id="tvChart" style="height:320px;border-radius:14px;overflow:hidden;background:#0a0e18;"></div>
         </div>
 
         <div class="glass">
@@ -476,7 +515,7 @@
 <script>
 // ================== CONFIG ==================
 // GANTI DENGAN WEB APP URL HASIL DEPLOY BACKEND
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyz640zmmh9U1Fjz8h3pFoJOm46T9XWMaVf4GhvqoKcNb-u1DssyKmaKuUDOgi2XQLS/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyeL3_scAtXBz9ljcg9a2n6hDXHkDz2Y_tjoiW-w6D86Qe9W9GTrRTNVHai6AVYWBnF/exec";
 
 const STORAGE_KEY = "nexus_v12_session";
 let session = null;
@@ -606,6 +645,8 @@ function enterApp() {
     $("adminDeepWrap").style.display = "block";
   }
   showView("viewHome");
+  loadIHSG();
+  loadSectorStrength();
   loadRadar();
   loadBandarPulse();
 }
@@ -893,6 +934,7 @@ function renderResult(data) {
   }
 
   calcLot();
+  loadTV(t.ticker || data.ticker);
 }
 
 // ================== POSITION SIZE ==================
@@ -901,6 +943,7 @@ function setRisk(r, el) {
   document.querySelectorAll(".risk-btn").forEach(b => b.classList.remove("active"));
   if (el) el.classList.add("active");
   calcLot();
+  loadTV(t.ticker || data.ticker);
 }
 
 function calcLot() {
@@ -992,6 +1035,100 @@ async function sendChat() {
   }
   log.scrollTop = log.scrollHeight;
 }
+
+
+// ================== IHSG + OUTLOOK + SECTOR ==================
+async function loadIHSG() {
+  try {
+    const data = await api("getIHSG", {}, 15000);
+    if (data.status !== "success") {
+      $("ihsgMiniOutlook").textContent = data.message || "Gagal memuat IHSG.";
+      return;
+    }
+    $("ihsgPrice").textContent = fmt(data.price);
+    const ch = data.changePct;
+    const chEl = $("ihsgChange");
+    chEl.textContent = (ch > 0 ? "+" : "") + ch + "%";
+    chEl.style.color = ch > 0 ? "var(--green)" : ch < 0 ? "var(--red)" : "var(--muted)";
+    $("ihsgRegime").textContent = data.regime || "-";
+    $("ihsgAdx").textContent = data.adx ?? "-";
+    $("ihsgRsi").textContent = data.rsi ?? "-";
+    const br = data.breadth || {};
+    $("ihsgBreadth").textContent = br.aboveEma21Pct != null ? br.aboveEma21Pct + "%" : "-";
+    $("ihsgMiniOutlook").textContent =
+      "Regime " + (data.regime || "-") +
+      " · Support " + fmt(data.support) +
+      " · Resistance " + fmt(data.resistance) +
+      (br.sampleSize ? " · Breadth sample " + br.sampleSize + " saham" : "");
+  } catch {
+    $("ihsgMiniOutlook").textContent = "Gagal memuat IHSG.";
+  }
+}
+
+async function loadFullOutlook() {
+  showView("viewOutlook");
+  $("fullOutlook").textContent = "Memuat outlook lengkap (bisa 10–20 detik)...";
+  try {
+    const data = await api("getMarketOutlook", {}, 60000);
+    if (data.status === "success") {
+      $("fullOutlook").textContent = data.outlook || JSON.stringify(data, null, 2);
+    } else {
+      $("fullOutlook").textContent = data.message || "Gagal memuat outlook.";
+    }
+  } catch {
+    $("fullOutlook").textContent = "Gagal terhubung.";
+  }
+}
+
+async function loadSectorStrength() {
+  const box = $("sectorBox");
+  try {
+    const data = await api("getSectorStrength", {}, 12000);
+    const d = data.data || {};
+    const keys = Object.keys(d);
+    if (!keys.length) {
+      box.innerHTML = '<div class="loading-inline">Belum ada data sektor (jalankan EOD Scan).</div>';
+      return;
+    }
+    const sorted = keys.map(k => ({ name: k, ...d[k] })).sort((a, b) => (b.strength || 0) - (a.strength || 0));
+    box.innerHTML = sorted.map(s => {
+      const color = (s.strength || 0) >= 65 ? "var(--green)" : (s.strength || 0) >= 50 ? "var(--yellow)" : "var(--red)";
+      return `<div class="row"><span>${s.name}</span><b style="color:${color}">${s.strength ?? "-"}</b></div>`;
+    }).join("");
+  } catch {
+    box.innerHTML = '<div class="loading-inline">Gagal memuat sektor.</div>';
+  }
+}
+
+function loadTV(ticker) {
+  const el = $("tvChart");
+  if (!el) return;
+  el.innerHTML = "";
+  if (!ticker) return;
+  const s = document.createElement("script");
+  s.src = "https://s3.tradingview.com/tv.js";
+  s.onload = () => {
+    try {
+      new TradingView.widget({
+        container_id: "tvChart",
+        symbol: "IDX:" + ticker,
+        interval: "D",
+        timezone: "Asia/Jakarta",
+        theme: "dark",
+        style: "1",
+        locale: "id",
+        toolbar_bg: "#03050a",
+        enable_publishing: false,
+        hide_top_toolbar: false,
+        allow_symbol_change: true,
+        width: "100%",
+        height: 320
+      });
+    } catch (e) {}
+  };
+  el.appendChild(s);
+}
+
 
 // ================== INIT ==================
 window.addEventListener("DOMContentLoaded", () => {
