@@ -293,7 +293,7 @@
           <div class="quota-pill">Kuota: <span id="quotaVal">-</span></div>
         </div>
 
-        <!-- IHSG SNAPSHOT -->
+        <!-- IHSG SNAPSHOT + CHART -->
         <div class="glass">
           <div class="section-label"><span class="grad">●</span> IHSG Market Snapshot</div>
           <div class="metric-grid">
@@ -306,34 +306,46 @@
             <div class="metric"><span>Breadth > EMA21</span><b id="ihsgBreadth">-</b></div>
             <div class="metric"><span>RSI</span><b id="ihsgRsi">-</b></div>
           </div>
-          <div id="ihsgMiniOutlook" style="font-size:12px;color:#cbd5e1;line-height:1.55;margin:8px 0 12px;">Memuat data IHSG...</div>
-          <button class="btn-ghost" onclick="loadFullOutlook()">Lihat Outlook Lengkap</button>
+          <div id="ihsgMiniOutlook" style="font-size:12px;color:#cbd5e1;line-height:1.55;margin:8px 0 10px;">Memuat data IHSG...</div>
+          <div id="ihsgChart" style="height:240px;border-radius:12px;overflow:hidden;background:#0a0e18;margin-bottom:10px;"></div>
+          <div class="two">
+            <button class="btn-ghost" onclick="loadFullOutlook()">Outlook Lengkap</button>
+            <button class="btn-ghost" onclick="showView('viewRadar');loadRadar();">Radar Top 15 →</button>
+          </div>
         </div>
 
-        <!-- SECTOR STRENGTH -->
+        <!-- SECTOR -->
         <div class="glass">
           <div class="section-label"><span class="grad">●</span> Kekuatan Sektor</div>
           <div id="sectorBox"><div class="loading-inline">Memuat sektor...</div></div>
         </div>
 
+        <!-- QUICK ANALYZE -->
         <div class="glass">
           <div class="section-label"><span class="grad">●</span> Analisa Cepat</div>
           <div class="search-box">
             <input id="tickerInput" type="text" placeholder="KODE SAHAM" maxlength="6">
             <button onclick="analyzeTicker()">→</button>
           </div>
-          <div class="disclaimer" style="margin-top:0;">Data Yahoo (delayed). Validasi Premium hanya untuk Admin.</div>
+          <div class="disclaimer" style="margin-top:0;">Data Yahoo (delayed). Validasi Premium hanya Admin.</div>
         </div>
 
+        <!-- BANDAR PULSE (compact) -->
         <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Bandar Pulse Hari Ini</div>
+          <div class="section-label"><span class="grad">●</span> Bandar Pulse</div>
           <div id="bandarPulse">
             <div class="loading-inline">Belum ada data Deep Scan.</div>
           </div>
         </div>
+      </div>
 
+      <!-- RADAR PAGE (terpisah) -->
+      <div id="viewRadar" class="view">
+        <div class="top-row">
+          <div style="font-weight:800;font-size:16px;">Radar Top 15</div>
+          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+        </div>
         <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Radar Top 15</div>
           <div id="radarList"><div class="loading-inline">Memuat radar...</div></div>
           <div id="adminDeepWrap" style="display:none;margin-top:12px;">
             <button class="btn-ghost yellow" id="btnDeepScan" onclick="runDeepScan()">⚡ Deep Scan Top 15 + Broksum</button>
@@ -343,7 +355,7 @@
         </div>
       </div>
 
-      <!-- OUTLOOK FULL -->
+<!-- OUTLOOK FULL -->
       <div id="viewOutlook" class="view">
         <div class="top-row">
           <div style="font-weight:800;font-size:16px;">IHSG Market Outlook</div>
@@ -505,9 +517,9 @@
   <div class="bottom-nav-wrap" id="bottomNav">
     <div class="bottom-nav">
       <div class="nav-item active" data-view="viewHome" onclick="showView('viewHome')"><span class="ico">⌂</span>Home</div>
+      <div class="nav-item" data-view="viewRadar" onclick="showView('viewRadar');loadRadar()"><span class="ico">◎</span>Radar</div>
       <div class="nav-item" data-view="viewAccum" onclick="showView('viewAccum');loadAccumulation()"><span class="ico">↑</span>Akum</div>
       <div class="nav-item" data-view="viewDist" onclick="showView('viewDist');loadDistribution()"><span class="ico">↓</span>Dist</div>
-      <div class="nav-item" data-view="viewPremium" onclick="showView('viewPremium');loadPremium()"><span class="ico">★</span>Watch</div>
       <div class="nav-item" data-view="viewProfile" onclick="showView('viewProfile');loadMyWatch()"><span class="ico">◉</span>Profil</div>
     </div>
   </div>
@@ -647,8 +659,10 @@ function enterApp() {
   showView("viewHome");
   loadIHSG();
   loadSectorStrength();
-  loadRadar();
   loadBandarPulse();
+  if (session.role === "ADMIN" && $("adminDeepWrap")) {
+    $("adminDeepWrap").style.display = "block";
+  }
 }
 
 function showView(id) {
@@ -1060,9 +1074,39 @@ async function loadIHSG() {
       " · Support " + fmt(data.support) +
       " · Resistance " + fmt(data.resistance) +
       (br.sampleSize ? " · Breadth sample " + br.sampleSize + " saham" : "");
+    loadIHSGChart();
   } catch {
     $("ihsgMiniOutlook").textContent = "Gagal memuat IHSG.";
   }
+}
+
+function loadIHSGChart() {
+  const el = $("ihsgChart");
+  if (!el) return;
+  el.innerHTML = "";
+  const s = document.createElement("script");
+  s.src = "https://s3.tradingview.com/tv.js";
+  s.onload = () => {
+    try {
+      new TradingView.widget({
+        container_id: "ihsgChart",
+        symbol: "IDX:COMPOSITE",
+        interval: "D",
+        timezone: "Asia/Jakarta",
+        theme: "dark",
+        style: "1",
+        locale: "id",
+        toolbar_bg: "#03050a",
+        enable_publishing: false,
+        hide_top_toolbar: true,
+        hide_legend: false,
+        allow_symbol_change: false,
+        width: "100%",
+        height: 240
+      });
+    } catch (e) {}
+  };
+  el.appendChild(s);
 }
 
 async function loadFullOutlook() {
