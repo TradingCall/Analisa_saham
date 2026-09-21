@@ -4,37 +4,104 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
   <title>NEXUS V12 — Precision Engine</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #03050a;
-      --card: rgba(13, 17, 31, 0.72);
-      --border: rgba(255,255,255,0.08);
-      --text: #f4f7fb;
-      --muted: #8b9bb4;
-      --cyan: #00e5ff;
-      --purple: #b537f2;
-      --green: #00ff9d;
-      --yellow: #ffb703;
-      --red: #ff2a5f;
-      --orange: #ff7a18;
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgMain: '#03050a',
+            cardBg: 'rgba(13, 17, 31, 0.72)',
+            borderCol: 'rgba(255,255,255,0.08)',
+            textMain: '#f4f7fb',
+            muted: '#8b9bb4',
+            nexusCyan: '#00e5ff',
+            nexusPurple: '#b537f2',
+            nexusGreen: '#00ff9d',
+            nexusYellow: '#ffb703',
+            nexusRed: '#ff2a5f',
+            nexusOrange: '#ff7a18'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+  </script>
+
+  <!-- Custom CSS (untuk animasi & style yang lebih optimal dengan CSS murni) -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass-panel {
+        @apply bg-cardBg backdrop-blur-[18px] border border-borderCol rounded-[18px] p-4 mb-3.5;
+      }
+      .section-label {
+        @apply text-[10px] font-extrabold text-muted tracking-[1.1px] uppercase mb-3 flex items-center gap-[7px];
+      }
+      .grad-text {
+        background: linear-gradient(120deg, #00e5ff, #b537f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .btn-main {
+        @apply w-full p-3.5 border-none rounded-[13px] font-extrabold text-[13px] tracking-[1px] uppercase text-[#001018] bg-gradient-to-br from-nexusCyan to-[#6d5efc] transition-opacity;
+      }
+      .btn-main:disabled { @apply opacity-55 cursor-not-allowed; }
+      .btn-ghost {
+        @apply w-full p-3 rounded-xl border border-nexusCyan/25 bg-nexusCyan/10 text-nexusCyan font-extrabold text-xs tracking-[0.7px] uppercase text-center transition-all active:scale-95;
+      }
+      .btn-ghost:disabled { @apply opacity-50 cursor-not-allowed; }
+      .btn-ghost.yellow { @apply border-nexusYellow/30 text-nexusYellow bg-nexusYellow/10; }
+      .btn-ghost.purple { @apply border-nexusPurple/30 text-nexusPurple bg-nexusPurple/10; }
+      .btn-ghost.red { @apply border-nexusRed/30 text-nexusRed bg-nexusRed/10; }
+      
+      .badge { @apply text-[10px] font-extrabold py-[3px] px-2 rounded-md tracking-[0.4px]; }
+      .badge-S { @apply bg-nexusOrange/20 text-nexusOrange border border-nexusOrange/40; }
+      .badge-A { @apply bg-nexusGreen/15 text-nexusGreen border border-nexusGreen/30; }
+      .badge-B { @apply bg-nexusCyan/10 text-nexusCyan border border-nexusCyan/30; }
+      .badge-C { @apply bg-nexusYellow/10 text-nexusYellow border border-nexusYellow/30; }
+      .badge-D { @apply bg-nexusRed/10 text-nexusRed border border-nexusRed/30; }
+
+      .bandar-tag { @apply inline-block text-[10px] font-bold py-[3px] px-2 rounded-md mb-[7px]; }
+      .bandar-tag.acc { @apply text-nexusGreen bg-nexusGreen/10 border border-nexusGreen/30; }
+      .bandar-tag.dist { @apply text-nexusRed bg-nexusRed/10 border border-nexusRed/30; }
+      .bandar-tag.unknown { @apply text-muted bg-white/5 border border-white/10; }
+      
+      .status-pill { @apply inline-block text-[11px] font-extrabold py-1.5 px-3 rounded-full mb-3; }
+      .status-now { @apply bg-nexusGreen/10 text-nexusGreen border border-nexusGreen/30; }
+      .status-wait { @apply bg-nexusYellow/10 text-nexusYellow border border-nexusYellow/30; }
+      .status-no { @apply bg-nexusRed/10 text-nexusRed border border-nexusRed/30; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     button { user-select: none; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+    
     body {
-      background: var(--bg);
+      background: var(--bgMain);
       background-image:
         radial-gradient(circle at 12% 35%, rgba(181,55,242,0.1), transparent 30%),
         radial-gradient(circle at 88% 15%, rgba(0,229,255,0.08), transparent 28%);
-      color: var(--text);
+      color: var(--textMain);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       overflow-x: hidden;
     }
+    
     .app { width: 100%; max-width: 480px; min-height: 100vh; position: relative; z-index: 1; padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+
+    /* Keyframes */
+    @keyframes barFill { to { width: 100%; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Splash */
     #splash {
@@ -43,467 +110,324 @@
       transition: opacity 0.5s ease, visibility 0.5s;
     }
     #splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-    .splash-logo {
-      font-size: 42px; font-weight: 800; letter-spacing: 5px;
-      background: linear-gradient(120deg, var(--cyan), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .splash-sub { margin-top: 8px; font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; }
-    .splash-bar { width: 120px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 4px; margin-top: 26px; overflow: hidden; }
-    .splash-bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--purple)); animation: barFill 1.3s 0.2s forwards; }
-    @keyframes barFill { to { width: 100%; } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .splash-bar > i { animation: barFill 1.3s 0.2s forwards; }
 
-    /* Auth */
-    #authView { display: none; padding: 40px 18px 30px; animation: fadeUp 0.4s ease; }
-    #authView.show { display: block; }
-    .auth-brand { text-align: center; margin-bottom: 28px; }
-    .auth-brand h1 {
-      font-size: 28px; font-weight: 800; letter-spacing: 4px;
-      background: linear-gradient(120deg, var(--cyan), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .auth-brand p { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .auth-card {
-      background: var(--card); backdrop-filter: blur(20px);
-      border: 1px solid var(--border); border-radius: 20px; padding: 22px;
-    }
-    .auth-tabs { display: flex; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 4px; margin-bottom: 18px; }
-    .auth-tab {
-      flex: 1; text-align: center; padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 800;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;
-    }
-    .auth-tab.active { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); }
-    .field { margin-bottom: 13px; }
-    .field label { display: block; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
-    .field input {
-      width: 100%; padding: 14px 15px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(0,0,0,0.35); color: #fff; font-size: 14px; outline: none;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .field input:focus { border-color: rgba(0,229,255,0.45); }
-    .auth-msg { display: none; font-size: 12px; padding: 10px 13px; border-radius: 11px; margin-bottom: 12px; line-height: 1.4; }
-    .auth-msg.err { display: block; background: rgba(255,42,95,0.12); border: 1px solid rgba(255,42,95,0.3); color: #ff8aa8; }
-    .auth-msg.ok { display: block; background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,157,0.28); color: #7dffen; }
-    .btn-main {
-      width: 100%; padding: 14px; border: none; border-radius: 13px; font-weight: 800; font-size: 13px;
-      letter-spacing: 1px; text-transform: uppercase; color: #001018;
-      background: linear-gradient(135deg, var(--cyan), #6d5efc);
-    }
-    .btn-main:disabled { opacity: 0.55; }
-    .disclaimer { font-size: 10px; color: #64748b; text-align: center; line-height: 1.45; margin-top: 16px; }
-
-    /* App shell */
-    #appView { display: none; }
-    #appView.show { display: block; }
+    /* Views */
     .view { display: none; padding: 16px 14px 10px; animation: fadeUp 0.3s ease; }
     .view.active { display: block; }
+    #authView { display: none; padding: 40px 18px 30px; animation: fadeUp 0.4s ease; }
+    #authView.show { display: block; }
+    #appView { display: none; }
+    #appView.show { display: block; }
 
-    .glass {
-      background: var(--card); backdrop-filter: blur(18px);
-      border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px;
-    }
-    .section-label {
-      font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1.1px;
-      text-transform: uppercase; margin-bottom: 11px; display: flex; align-items: center; gap: 7px;
-    }
-    .grad { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .avatar {
-      width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 15px; border: 1px solid rgba(181,55,242,0.4);
-      background: linear-gradient(135deg, rgba(181,55,242,0.25), transparent);
-    }
-    .quota-pill {
-      font-size: 11px; font-weight: 700; color: var(--cyan);
-      background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25);
-      padding: 6px 11px; border-radius: 20px;
-    }
-
-    .search-box {
-      display: flex; gap: 8px; background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 5px; margin-bottom: 12px;
-    }
-    .search-box input {
-      flex: 1; background: transparent; border: none; color: #fff; padding: 10px 12px; outline: none;
-      font-family: 'JetBrains Mono', monospace; font-size: 14px; text-transform: uppercase;
-    }
-    .search-box button {
-      width: 42px; height: 42px; border: none; border-radius: 11px; background: var(--cyan); color: #001018; font-weight: 800;
-    }
-
-    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 12px; }
-    .metric { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 13px; padding: 11px 13px; }
-    .metric span { display: block; font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3px; }
-    .metric b { font-size: 16px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-
-    .btn-ghost {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,229,255,0.25);
-      background: rgba(0,229,255,0.08); color: var(--cyan); font-weight: 800; font-size: 12px;
-      letter-spacing: 0.7px; text-transform: uppercase;
-    }
-    .btn-ghost:disabled { opacity: 0.5; }
-    .btn-ghost.yellow { border-color: rgba(255,183,3,0.35); color: var(--yellow); background: rgba(255,183,3,0.1); }
-    .btn-ghost.purple { border-color: rgba(181,55,242,0.35); color: var(--purple); background: rgba(181,55,242,0.1); }
-    .btn-ghost.red { border-color: rgba(255,42,95,0.35); color: var(--red); background: rgba(255,42,95,0.08); }
-
-    /* Cards */
+    /* Custom Inputs & Elements */
+    .auth-tab.active { @apply bg-nexusCyan/10 text-nexusCyan border border-nexusCyan/25; }
+    .input-field { @apply w-full p-3.5 rounded-[13px] border border-white/5 bg-black/35 text-white text-sm outline-none font-mono focus:border-nexusCyan/45 transition-colors; }
+    
+    .metric-grid { @apply grid grid-cols-2 gap-[9px] mb-3; }
+    .metric { @apply bg-black/25 border border-white/5 rounded-[13px] py-2.5 px-3; }
+    
     .radar-card, .bandar-card {
-      background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 15px; padding: 13px; margin-bottom: 9px; cursor: pointer; transition: 0.2s;
+      @apply bg-black/30 border border-white/5 rounded-2xl p-3 mb-2 cursor-pointer transition-all active:scale-95 active:border-nexusCyan/30;
     }
-    .radar-card:active, .bandar-card:active { transform: scale(0.98); border-color: rgba(0,229,255,0.3); }
-    .radar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
-    .ticker { font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-    .badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 7px; letter-spacing: 0.4px; }
-    .badge-S { background: rgba(255,122,24,0.18); color: var(--orange); border: 1px solid rgba(255,122,24,0.4); }
-    .badge-A { background: rgba(0,255,157,0.15); color: var(--green); border: 1px solid rgba(0,255,157,0.3); }
-    .badge-B { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.28); }
-    .badge-C { background: rgba(255,183,3,0.12); color: var(--yellow); border: 1px solid rgba(255,183,3,0.28); }
-    .badge-D { background: rgba(255,42,95,0.12); color: var(--red); border: 1px solid rgba(255,42,95,0.28); }
-    .setup-tag {
-      display: inline-block; font-size: 10px; font-weight: 700; color: var(--purple);
-      background: rgba(181,55,242,0.12); border: 1px solid rgba(181,55,242,0.25);
-      padding: 3px 8px; border-radius: 6px; margin-bottom: 7px;
-    }
-    .bandar-tag {
-      display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; margin-bottom: 7px;
-    }
-    .bandar-tag.acc { color: var(--green); background: rgba(0,255,157,0.12); border: 1px solid rgba(0,255,157,0.28); }
-    .bandar-tag.dist { color: var(--red); background: rgba(255,42,95,0.12); border: 1px solid rgba(255,42,95,0.28); }
-    .bandar-tag.unknown { color: var(--muted); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-    .meta { display: flex; gap: 11px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
-    .meta b { color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
+    .plan-box { @apply bg-black/30 rounded-[13px] p-3 mb-2 border-l-[3px] border-nexusCyan; }
+    .plan-box.sl { @apply border-nexusRed; }
+    .plan-box.tp { @apply border-nexusGreen; }
 
-    /* Result */
-    .score-big { font-size: 34px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1; }
-    .plan-box { background: rgba(0,0,0,0.3); border-radius: 13px; padding: 13px; margin-bottom: 9px; border-left: 3px solid var(--cyan); }
-    .plan-box.sl { border-left-color: var(--red); }
-    .plan-box.tp { border-left-color: var(--green); }
-    .plan-title { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
-    .plan-val { font-size: 17px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    .plan-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
-    .status-pill { display: inline-block; font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 20px; margin-bottom: 11px; }
-    .status-now { background: rgba(0,255,157,0.12); color: var(--green); border: 1px solid rgba(0,255,157,0.3); }
-    .status-wait { background: rgba(255,183,3,0.12); color: var(--yellow); border: 1px solid rgba(255,183,3,0.3); }
-    .status-no { background: rgba(255,42,95,0.12); color: var(--red); border: 1px solid rgba(255,42,95,0.3); }
-    .warning-box {
-      background: rgba(255,42,95,0.1); border: 1px solid rgba(255,42,95,0.3); border-radius: 12px;
-      padding: 11px 13px; font-size: 12px; color: #ff8aa8; margin-bottom: 12px; line-height: 1.45;
-    }
-    .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 12px; }
-    .row:last-child { border-bottom: none; }
-    .row span { color: var(--muted); }
-    .row b { font-family: 'JetBrains Mono', monospace; }
-
-    .risk-row { display: flex; gap: 7px; margin: 9px 0 6px; }
-    .risk-btn {
-      flex: 1; padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.3); color: var(--muted); font-size: 11px; font-weight: 800;
-    }
-    .risk-btn.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,183,3,0.12); }
-
-    /* Chat */
-    .chat-wrap { display: flex; flex-direction: column; height: calc(100vh - 160px); min-height: 400px; }
-    .chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; padding-bottom: 8px; }
-    .bubble { max-width: 88%; padding: 11px 13px; border-radius: 13px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
-    .bubble.user { align-self: flex-end; background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.22); }
-    .bubble.bot { align-self: flex-start; background: rgba(181,55,242,0.1); border: 1px solid rgba(181,55,242,0.2); }
-    .chat-input-row { display: flex; gap: 8px; margin-top: 8px; }
-    .chat-input-row input {
-      flex: 1; padding: 12px 13px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.35); color: #fff; outline: none; font-size: 13px;
-    }
-    .chat-input-row button { padding: 0 16px; border: none; border-radius: 13px; background: var(--cyan); color: #001018; font-weight: 800; }
-
-    /* Bottom nav */
+    .chat-wrap { height: calc(100vh - 160px); min-height: 400px; }
+    
     .bottom-nav-wrap {
-      position: fixed; bottom: 0; left: 0; width: 100%; display: none; justify-content: center;
-      padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100;
-      background: linear-gradient(to top, var(--bg) 35%, transparent);
+      background: linear-gradient(to top, #03050a 35%, transparent);
     }
-    .bottom-nav-wrap.show { display: flex; }
-    .bottom-nav {
-      width: 94%; max-width: 430px; display: flex; justify-content: space-around;
-      background: rgba(13,17,31,0.92); backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 26px; padding: 9px 4px;
-    }
-    .nav-item {
-      width: 18%; display: flex; flex-direction: column; align-items: center; gap: 2px;
-      font-size: 9px; font-weight: 700; color: #4b5563; text-transform: uppercase;
-    }
-    .nav-item.active { color: var(--cyan); }
-    .nav-item .ico { font-size: 17px; }
-
-    .loading-inline { font-size: 12px; color: var(--muted); }
-    .empty { text-align: center; color: var(--muted); font-size: 13px; padding: 22px 10px; line-height: 1.5; }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   </style>
 </head>
 <body>
+  <!-- SPLASH SCREEN -->
   <div id="splash">
-    <div class="splash-logo">NEXUS</div>
-    <div class="splash-sub">Precision Engine V12</div>
-    <div class="splash-bar"><i></i></div>
+    <div class="text-[42px] font-extrabold tracking-[5px] grad-text">NEXUS</div>
+    <div class="mt-2 text-[11px] text-muted tracking-[3px] uppercase">Precision Engine V12</div>
+    <div class="w-[120px] h-[3px] bg-white/5 rounded mt-6 overflow-hidden">
+      <i class="block h-full w-0 bg-gradient-to-r from-nexusCyan to-nexusPurple"></i>
+    </div>
   </div>
 
   <div class="app">
-    <!-- AUTH -->
+    <!-- AUTH VIEW -->
     <div id="authView">
-      <div class="auth-brand">
-        <h1>NEXUS</h1>
-        <p>Precision Trade Engine V12</p>
+      <div class="text-center mb-7">
+        <h1 class="text-[28px] font-extrabold tracking-[4px] grad-text">NEXUS</h1>
+        <p class="text-xs text-muted mt-1.5">Precision Trade Engine V12</p>
       </div>
-      <div class="auth-card">
-        <div class="auth-tabs">
-          <div class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">Masuk</div>
-          <div class="auth-tab" id="tabRegister" onclick="switchAuth('register')">Daftar</div>
+      
+      <div class="bg-cardBg backdrop-blur-[20px] border border-borderCol rounded-[20px] p-[22px]">
+        <div class="flex bg-black/35 rounded-xl p-1 mb-4">
+          <div class="flex-1 text-center p-2.5 rounded-[10px] text-xs font-extrabold text-muted uppercase tracking-[0.8px] cursor-pointer auth-tab active" id="tabLogin" onclick="switchAuth('login')">Masuk</div>
+          <div class="flex-1 text-center p-2.5 rounded-[10px] text-xs font-extrabold text-muted uppercase tracking-[0.8px] cursor-pointer auth-tab" id="tabRegister" onclick="switchAuth('register')">Daftar</div>
         </div>
-        <div id="authMsg" class="auth-msg"></div>
-        <div class="field">
-          <label>Username</label>
-          <input id="authUser" type="text" placeholder="contoh: trader01" autocomplete="username">
+        
+        <div id="authMsg" class="hidden text-xs p-2.5 rounded-[11px] mb-3 leading-relaxed"></div>
+        
+        <div class="mb-3">
+          <label class="block text-[10px] font-bold text-muted tracking-[1px] uppercase mb-1.5">Username</label>
+          <input id="authUser" type="text" class="input-field" placeholder="contoh: trader01" autocomplete="username">
         </div>
-        <div class="field">
-          <label>Password</label>
-          <input id="authPass" type="password" placeholder="minimal 8 karakter" autocomplete="current-password">
+        <div class="mb-3">
+          <label class="block text-[10px] font-bold text-muted tracking-[1px] uppercase mb-1.5">Password</label>
+          <input id="authPass" type="password" class="input-field" placeholder="minimal 8 karakter" autocomplete="current-password">
         </div>
-        <div class="field" id="inviteField" style="display:none;">
-          <label>Kode Undangan (opsional)</label>
-          <input id="authInvite" type="text" placeholder="kosongkan jika tidak perlu">
+        <div class="mb-3 hidden" id="inviteField">
+          <label class="block text-[10px] font-bold text-muted tracking-[1px] uppercase mb-1.5">Kode Undangan (opsional)</label>
+          <input id="authInvite" type="text" class="input-field" placeholder="kosongkan jika tidak perlu">
         </div>
-        <button class="btn-main" id="authBtn" onclick="submitAuth()">Masuk</button>
+        
+        <button class="btn-main mt-2" id="authBtn" onclick="submitAuth()">Masuk</button>
       </div>
-      <p class="disclaimer">Alat analisis data (SaaS). Bukan saran investasi atau rekomendasi perdagangan. Segala keputusan dan risiko sepenuhnya tanggung jawab pengguna.</p>
+      <p class="text-[10px] text-slate-500 text-center leading-relaxed mt-4">Alat analisis data (SaaS). Bukan saran investasi atau rekomendasi perdagangan. Segala keputusan dan risiko sepenuhnya tanggung jawab pengguna.</p>
     </div>
 
-    <!-- APP -->
+    <!-- APP VIEW -->
     <div id="appView">
-      <!-- HOME -->
+      
+      <!-- VIEW: HOME -->
       <div id="viewHome" class="view active">
-        <div class="top-row">
-          <div style="display:flex;align-items:center;gap:11px;">
-            <div class="avatar" id="userAvatar">N</div>
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-[42px] h-[42px] rounded-[13px] flex items-center justify-center font-extrabold text-[15px] border border-nexusPurple/40 bg-gradient-to-br from-nexusPurple/25 to-transparent text-white" id="userAvatar">N</div>
             <div>
-              <div style="font-weight:800;font-size:14px;" id="userName">User</div>
-              <div style="font-size:11px;color:var(--muted);">NEXUS V12</div>
+              <div class="font-extrabold text-sm" id="userName">User</div>
+              <div class="text-[11px] text-muted">NEXUS V12</div>
             </div>
           </div>
-          <div class="quota-pill">Kuota: <span id="quotaVal">-</span></div>
+          <div class="text-[11px] font-bold text-nexusCyan bg-nexusCyan/10 border border-nexusCyan/25 px-3 py-1.5 rounded-full">Kuota: <span id="quotaVal">-</span></div>
         </div>
 
-        <!-- IHSG SNAPSHOT + CHART -->
-        <div class="glass">
-          <div class="section-label"><span class="grad">●</span> IHSG Market Snapshot</div>
+        <!-- IHSG SNAPSHOT -->
+        <div class="glass-panel">
+          <div class="section-label"><span class="grad-text text-sm">●</span> IHSG Market Snapshot</div>
           <div class="metric-grid">
-            <div class="metric"><span>IHSG</span><b id="ihsgPrice">-</b></div>
-            <div class="metric"><span>Perubahan</span><b id="ihsgChange">-</b></div>
-            <div class="metric"><span>Regime</span><b id="ihsgRegime">-</b></div>
-            <div class="metric"><span>ADX</span><b id="ihsgAdx">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">IHSG</span><b class="text-base font-mono font-bold" id="ihsgPrice">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">Perubahan</span><b class="text-base font-mono font-bold" id="ihsgChange">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">Regime</span><b class="text-base font-mono font-bold" id="ihsgRegime">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">ADX</span><b class="text-base font-mono font-bold" id="ihsgAdx">-</b></div>
           </div>
           <div class="metric-grid">
-            <div class="metric"><span>Breadth > EMA21</span><b id="ihsgBreadth">-</b></div>
-            <div class="metric"><span>RSI</span><b id="ihsgRsi">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">Breadth > EMA21</span><b class="text-base font-mono font-bold" id="ihsgBreadth">-</b></div>
+            <div class="metric"><span class="block text-[9px] text-muted font-bold tracking-[0.7px] uppercase mb-1">RSI</span><b class="text-base font-mono font-bold" id="ihsgRsi">-</b></div>
           </div>
-          <div id="ihsgMiniOutlook" style="font-size:12px;color:#cbd5e1;line-height:1.55;margin:8px 0 10px;">Memuat data IHSG...</div>
-          <div id="ihsgChart" style="height:240px;border-radius:12px;overflow:hidden;background:#0a0e18;margin-bottom:10px;"></div>
-          <div class="two">
+          <div id="ihsgMiniOutlook" class="text-xs text-slate-300 leading-relaxed my-2">Memuat data IHSG...</div>
+          <div id="ihsgChart" class="h-[240px] rounded-xl overflow-hidden bg-[#0a0e18] mb-2.5"></div>
+          <div class="grid grid-cols-2 gap-2">
             <button class="btn-ghost" onclick="loadFullOutlook()">Outlook Lengkap</button>
             <button class="btn-ghost" onclick="showView('viewRadar');loadRadar();">Radar Top 15 →</button>
           </div>
         </div>
 
         <!-- SECTOR -->
-        <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Kekuatan Sektor</div>
-          <div id="sectorBox"><div class="loading-inline">Memuat sektor...</div></div>
+        <div class="glass-panel">
+          <div class="section-label"><span class="grad-text text-sm">●</span> Kekuatan Sektor</div>
+          <div id="sectorBox"><div class="text-xs text-muted">Memuat sektor...</div></div>
         </div>
 
         <!-- QUICK ANALYZE -->
-        <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Analisa Cepat</div>
-          <div class="search-box">
-            <input id="tickerInput" type="text" placeholder="KODE SAHAM" maxlength="6">
-            <button onclick="analyzeTicker()">→</button>
+        <div class="glass-panel">
+          <div class="section-label"><span class="grad-text text-sm">●</span> Analisa Cepat</div>
+          <div class="flex gap-2 bg-black/30 border border-nexusCyan/20 rounded-[14px] p-1.5 mb-3">
+            <input id="tickerInput" type="text" placeholder="KODE SAHAM" maxlength="6" class="flex-1 bg-transparent border-none text-white px-3 py-2.5 outline-none font-mono text-sm uppercase">
+            <button onclick="analyzeTicker()" class="w-[42px] h-[42px] border-none rounded-[11px] bg-nexusCyan text-[#001018] font-extrabold">→</button>
           </div>
-          <div class="disclaimer" style="margin-top:0;">Data Yahoo (delayed). Validasi Premium hanya Admin.</div>
+          <div class="text-[10px] text-slate-500 text-center leading-relaxed">Data Yahoo (delayed). Validasi Premium hanya Admin.</div>
         </div>
 
-        <!-- BANDAR PULSE (compact) -->
-        <div class="glass">
-          <div class="section-label"><span class="grad">●</span> Bandar Pulse</div>
+        <!-- BANDAR PULSE -->
+        <div class="glass-panel">
+          <div class="section-label"><span class="grad-text text-sm">●</span> Bandar Pulse</div>
           <div id="bandarPulse">
-            <div class="loading-inline">Belum ada data Deep Scan.</div>
+            <div class="text-xs text-muted">Belum ada data Deep Scan.</div>
           </div>
+        </div>
+
+        <!-- EXTRA QUICK LINKS -->
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <button class="btn-ghost purple flex items-center justify-center gap-2" onclick="showView('viewChat')">
+            <span class="text-lg leading-none">✧</span> NEXUS AI Chat
+          </button>
+          <button class="btn-ghost yellow flex items-center justify-center gap-2" onclick="showView('viewPremium');loadPremium()">
+            <span class="text-lg leading-none">★</span> Premium Watchlist
+          </button>
         </div>
       </div>
 
-      <!-- RADAR PAGE (terpisah) -->
+      <!-- VIEW: RADAR -->
       <div id="viewRadar" class="view">
-        <div class="top-row">
-          <div style="font-weight:800;font-size:16px;">Radar Top 15</div>
-          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+        <div class="flex justify-between items-center mb-4">
+          <div class="font-extrabold text-base">Radar Top 15</div>
+          <button class="btn-ghost w-auto px-3 py-2" onclick="showView('viewHome')">←</button>
         </div>
-        <div class="glass">
-          <div id="radarList"><div class="loading-inline">Memuat radar...</div></div>
-          <div id="adminDeepWrap" style="display:none;margin-top:12px;">
+        <div class="glass-panel">
+          <div id="radarList"><div class="text-xs text-muted">Memuat radar...</div></div>
+          <div id="adminDeepWrap" class="hidden mt-3">
             <button class="btn-ghost yellow" id="btnDeepScan" onclick="runDeepScan()">⚡ Deep Scan Top 15 + Broksum</button>
-            <div id="deepStatus" class="disclaimer" style="margin-top:8px;"></div>
+            <div id="deepStatus" class="text-[10px] text-slate-500 text-center mt-2"></div>
           </div>
-          <div class="disclaimer" id="radarMeta" style="margin-top:8px;"></div>
+          <div class="text-[10px] text-slate-500 text-center mt-2" id="radarMeta"></div>
         </div>
       </div>
 
-<!-- OUTLOOK FULL -->
+      <!-- VIEW: OUTLOOK FULL -->
       <div id="viewOutlook" class="view">
-        <div class="top-row">
-          <div style="font-weight:800;font-size:16px;">IHSG Market Outlook</div>
-          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+        <div class="flex justify-between items-center mb-4">
+          <div class="font-extrabold text-base">IHSG Market Outlook</div>
+          <button class="btn-ghost w-auto px-3 py-2" onclick="showView('viewHome')">←</button>
         </div>
-        <div class="glass">
-          <div id="fullOutlook" style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:#d7e0ee;">Memuat outlook...</div>
+        <div class="glass-panel">
+          <div id="fullOutlook" class="text-[13px] leading-[1.65] whitespace-pre-wrap text-[#d7e0ee]">Memuat outlook...</div>
         </div>
       </div>
 
-<!-- RESULT -->
+      <!-- VIEW: RESULT -->
       <div id="viewResult" class="view">
-        <div class="top-row">
+        <div class="flex justify-between items-start mb-4">
           <div>
-            <div style="font-size:19px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="resTicker">-</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="resSetupLine">-</div>
+            <div class="text-[19px] font-extrabold font-mono" id="resTicker">-</div>
+            <div class="text-xs text-muted mt-0.5" id="resSetupLine">-</div>
           </div>
-          <button class="btn-ghost" style="width:auto;padding:8px 12px;" onclick="showView('viewHome')">←</button>
+          <button class="btn-ghost w-auto px-3 py-2" onclick="showView('viewHome')">←</button>
         </div>
 
-        <div id="adminPanel" style="display:none;gap:8px;margin-bottom:12px;" class="two">
+        <div id="adminPanel" class="hidden grid-cols-2 gap-2 mb-3">
           <button class="btn-ghost yellow" id="btnPremium" onclick="analyzeTicker(null, true)">⚡ Validasi Premium</button>
           <button class="btn-ghost purple" onclick="addToPaperWatch()">+ Pantau Setup</button>
         </div>
 
-        <div id="fakeWarning" class="warning-box" style="display:none;"></div>
+        <div id="fakeWarning" class="bg-nexusRed/10 border border-nexusRed/30 rounded-xl p-3 text-xs text-[#ff8aa8] mb-3 leading-relaxed hidden"></div>
 
-        <div class="glass">
-          <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;">
+        <div class="glass-panel">
+          <div class="flex gap-3.5 items-center mb-3.5">
             <div>
-              <div class="score-big" id="resTQ">-</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Trade Quality</div>
+              <div class="text-[34px] font-extrabold font-mono leading-none" id="resTQ">-</div>
+              <div class="text-[11px] text-muted mt-1">Trade Quality</div>
             </div>
-            <div style="flex:1;">
-              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px;">
+            <div class="flex-1">
+              <div class="flex gap-[7px] flex-wrap mb-[7px]">
                 <span class="badge" id="resGrade">-</span>
-                <span class="setup-tag" id="resSetupTag">-</span>
+                <span class="inline-block text-[10px] font-bold text-nexusPurple bg-nexusPurple/10 border border-nexusPurple/25 py-[3px] px-2 rounded-md" id="resSetupTag">-</span>
                 <span class="bandar-tag" id="resBandarTag">-</span>
               </div>
-              <div class="row"><span>Technical</span><b id="resScore">-</b></div>
-              <div class="row"><span>Harga</span><b id="resPrice">-</b></div>
-              <div class="row"><span>Sumber Data</span><b id="resSource">-</b></div>
+              <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Technical</span><b class="font-mono" id="resScore">-</b></div>
+              <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Harga</span><b class="font-mono" id="resPrice">-</b></div>
+              <div class="flex justify-between py-2 text-xs"><span class="text-muted">Sumber Data</span><b class="font-mono" id="resSource">-</b></div>
             </div>
           </div>
 
           <div id="resStatus" class="status-pill status-wait">-</div>
 
           <div class="plan-box">
-            <div class="plan-title">Zona Entry (Sistematis)</div>
-            <div class="plan-val" id="resEntry">-</div>
-            <div class="plan-desc" id="resTrigger">-</div>
+            <div class="text-[10px] font-extrabold text-muted tracking-[1px] uppercase mb-1">Zona Entry (Sistematis)</div>
+            <div class="text-[17px] font-bold font-mono" id="resEntry">-</div>
+            <div class="text-[11px] text-muted mt-1 leading-relaxed" id="resTrigger">-</div>
           </div>
           <div class="plan-box sl">
-            <div class="plan-title">Stop Loss</div>
-            <div class="plan-val" id="resSL">-</div>
+            <div class="text-[10px] font-extrabold text-muted tracking-[1px] uppercase mb-1">Stop Loss</div>
+            <div class="text-[17px] font-bold font-mono" id="resSL">-</div>
           </div>
           <div class="plan-box tp">
-            <div class="plan-title">Take Profit</div>
-            <div class="plan-val" id="resTP">-</div>
-            <div class="plan-desc" id="resRR">-</div>
+            <div class="text-[10px] font-extrabold text-muted tracking-[1px] uppercase mb-1">Take Profit</div>
+            <div class="text-[17px] font-bold font-mono" id="resTP">-</div>
+            <div class="text-[11px] text-muted mt-1 leading-relaxed" id="resRR">-</div>
           </div>
         </div>
 
-        <div class="glass">
+        <div class="glass-panel">
           <div class="section-label">Indikator & Konteks</div>
-          <div class="row"><span>RSI</span><b id="resRSI">-</b></div>
-          <div class="row"><span>ADX</span><b id="resADX">-</b></div>
-          <div class="row"><span>Struktur</span><b id="resStruct">-</b></div>
-          <div class="row"><span>RVOL</span><b id="resRvol">-</b></div>
-          <div class="row"><span>RS vs IHSG 20D</span><b id="resRS">-</b></div>
-          <div class="row"><span>Sektor</span><b id="resSector">-</b></div>
-          <div class="row"><span>Market Regime</span><b id="resRegime">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">RSI</span><b class="font-mono" id="resRSI">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">ADX</span><b class="font-mono" id="resADX">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Struktur</span><b class="font-mono" id="resStruct">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">RVOL</span><b class="font-mono" id="resRvol">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">RS vs IHSG 20D</span><b class="font-mono" id="resRS">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Sektor</span><b class="font-mono" id="resSector">-</b></div>
+          <div class="flex justify-between py-2 text-xs"><span class="text-muted">Market Regime</span><b class="font-mono" id="resRegime">-</b></div>
         </div>
 
-        <div class="glass" id="broksumBox" style="display:none;">
+        <div class="glass-panel hidden" id="broksumBox">
           <div class="section-label">Bandarmologi (Broksum)</div>
-          <div class="row"><span>Status</span><b id="resBandarStatus">-</b></div>
-          <div class="row"><span>Net Buy (lot)</span><b id="resNetBuy">-</b></div>
-          <div style="margin-top:8px;font-size:11px;color:var(--muted);" id="resTopBrokers">-</div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Status</span><b class="font-mono" id="resBandarStatus">-</b></div>
+          <div class="flex justify-between py-2 text-xs"><span class="text-muted">Net Buy (lot)</span><b class="font-mono" id="resNetBuy">-</b></div>
+          <div class="mt-2 text-[11px] text-muted" id="resTopBrokers">-</div>
         </div>
 
-        <div class="glass">
+        <div class="glass-panel">
           <div class="section-label">Chart</div>
-          <div id="tvChart" style="height:320px;border-radius:14px;overflow:hidden;background:#0a0e18;"></div>
+          <div id="tvChart" class="h-[320px] rounded-[14px] overflow-hidden bg-[#0a0e18]"></div>
         </div>
 
-        <div class="glass">
+        <div class="glass-panel">
           <div class="section-label">Position Size (Perkiraan)</div>
-          <div class="risk-row">
-            <button class="risk-btn active" data-risk="1" onclick="setRisk(1,this)">1%</button>
-            <button class="risk-btn" data-risk="1.5" onclick="setRisk(1.5,this)">1.5%</button>
-            <button class="risk-btn" data-risk="2" onclick="setRisk(2,this)">2%</button>
+          <div class="flex gap-[7px] my-2">
+            <button class="flex-1 p-2 rounded-[10px] border border-white/10 bg-black/30 text-muted text-[11px] font-extrabold risk-btn active:bg-nexusYellow/10 active:border-nexusYellow active:text-nexusYellow" data-risk="1" onclick="setRisk(1,this)" id="btnRisk1">1%</button>
+            <button class="flex-1 p-2 rounded-[10px] border border-white/10 bg-black/30 text-muted text-[11px] font-extrabold risk-btn" data-risk="1.5" onclick="setRisk(1.5,this)">1.5%</button>
+            <button class="flex-1 p-2 rounded-[10px] border border-white/10 bg-black/30 text-muted text-[11px] font-extrabold risk-btn" data-risk="2" onclick="setRisk(2,this)">2%</button>
           </div>
-          <div class="field" style="margin-top:6px;">
-            <label style="font-size:10px;color:var(--muted);font-weight:700;">Modal (Rp)</label>
-            <input id="capitalInput" type="number" value="10000000" style="width:100%;padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35);color:#fff;margin-top:5px;font-family:'JetBrains Mono',monospace;">
+          <div class="mt-1.5">
+            <label class="text-[10px] text-muted font-bold">Modal (Rp)</label>
+            <input id="capitalInput" type="number" value="10000000" class="input-field mt-1">
           </div>
-          <div class="row"><span>Estimasi lot</span><b id="resLot">-</b></div>
-          <div class="disclaimer">Perhitungan kasar. Sesuaikan fee & aturan broker.</div>
+          <div class="flex justify-between py-2 mt-2 text-xs"><span class="text-muted">Estimasi lot</span><b class="font-mono" id="resLot">-</b></div>
+          <div class="text-[10px] text-slate-500 text-center leading-relaxed mt-2">Perhitungan kasar. Sesuaikan fee & aturan broker.</div>
         </div>
       </div>
 
-      <!-- AKUMULASI -->
+      <!-- VIEW: AKUMULASI -->
       <div id="viewAccum" class="view">
-        <div class="section-label"><span class="grad">●</span> Akumulasi Bandar</div>
-        <div id="accumList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
+        <div class="section-label"><span class="grad-text text-sm">●</span> Akumulasi Bandar</div>
+        <div id="accumList"><div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
 
-      <!-- DISTRIBUSI -->
+      <!-- VIEW: DISTRIBUSI -->
       <div id="viewDist" class="view">
-        <div class="section-label"><span class="grad">●</span> Distribusi Bandar</div>
-        <div id="distList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
+        <div class="section-label"><span class="grad-text text-sm">●</span> Distribusi Bandar</div>
+        <div id="distList"><div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
 
-      <!-- PREMIUM WATCHLIST -->
+      <!-- VIEW: PREMIUM WATCHLIST -->
       <div id="viewPremium" class="view">
-        <div class="section-label"><span class="grad">●</span> Premium Watchlist</div>
-        <div id="premiumList"><div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
+        <div class="flex justify-between items-center mb-4">
+          <div class="section-label mb-0"><span class="grad-text text-sm">●</span> Premium Watchlist</div>
+          <button class="btn-ghost w-auto px-3 py-2" onclick="showView('viewHome')">←</button>
+        </div>
+        <div id="premiumList"><div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada data. Jalankan Deep Scan (Admin).</div></div>
       </div>
 
-      <!-- CHAT -->
+      <!-- VIEW: CHAT -->
       <div id="viewChat" class="view">
-        <div class="section-label"><span class="grad">●</span> NEXUS Chat</div>
-        <div class="glass chat-wrap">
-          <div class="chat-log" id="chatLog">
-            <div class="bubble bot">Halo. Tanya seputar teknikal atau setup. Ingat: ini alat analisis, bukan saran investasi.</div>
+        <div class="flex justify-between items-center mb-4">
+          <div class="section-label mb-0"><span class="grad-text text-sm">●</span> NEXUS Chat</div>
+          <button class="btn-ghost w-auto px-3 py-2" onclick="showView('viewHome')">←</button>
+        </div>
+        <div class="glass-panel chat-wrap flex flex-col">
+          <div class="flex-1 overflow-y-auto flex flex-col gap-2 pb-2" id="chatLog">
+            <div class="max-w-[88%] p-3 rounded-[13px] text-[13px] leading-relaxed whitespace-pre-wrap self-start bg-nexusPurple/10 border border-nexusPurple/20">Halo. Tanya seputar teknikal atau setup. Ingat: ini alat analisis, bukan saran investasi.</div>
           </div>
-          <div class="chat-input-row">
-            <input id="chatInput" type="text" placeholder="Tulis pertanyaan..." onkeydown="if(event.key==='Enter')sendChat()">
-            <button onclick="sendChat()">Kirim</button>
+          <div class="flex gap-2 mt-2">
+            <input id="chatInput" type="text" placeholder="Tulis pertanyaan..." class="input-field" onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="px-4 border-none rounded-[13px] bg-nexusCyan text-[#001018] font-extrabold" onclick="sendChat()">Kirim</button>
           </div>
         </div>
       </div>
 
-      <!-- PROFILE -->
+      <!-- VIEW: PROFILE -->
       <div id="viewProfile" class="view">
-        <div class="glass">
+        <div class="glass-panel">
           <div class="section-label">Profil</div>
-          <div class="row"><span>Username</span><b id="profUser">-</b></div>
-          <div class="row"><span>Role</span><b id="profRole">-</b></div>
-          <div class="row"><span>Kuota</span><b id="profQuota">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Username</span><b class="font-mono" id="profUser">-</b></div>
+          <div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">Role</span><b class="font-mono" id="profRole">-</b></div>
+          <div class="flex justify-between py-2 text-xs"><span class="text-muted">Kuota</span><b class="font-mono" id="profQuota">-</b></div>
         </div>
-        <div class="glass">
+        <div class="glass-panel">
           <div class="section-label">Paper Watchlist Saya</div>
-          <div id="myWatchList"><div class="empty">Belum ada setup yang dipantau.</div></div>
+          <div id="myWatchList"><div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada setup yang dipantau.</div></div>
         </div>
         <button class="btn-ghost red" onclick="logout()">Keluar</button>
-        <p class="disclaimer" style="margin-top:14px;">
+        <p class="text-[10px] text-slate-500 text-center leading-relaxed mt-3.5">
           NEXUS V12 — Precision Engine<br>
           Perangkat lunak analisis data (SaaS).<br>
           Bukan penasihat investasi berizin OJK.<br>
@@ -514,13 +438,13 @@
   </div>
 
   <!-- BOTTOM NAV -->
-  <div class="bottom-nav-wrap" id="bottomNav">
-    <div class="bottom-nav">
-      <div class="nav-item active" data-view="viewHome" onclick="showView('viewHome')"><span class="ico">⌂</span>Home</div>
-      <div class="nav-item" data-view="viewRadar" onclick="showView('viewRadar');loadRadar()"><span class="ico">◎</span>Radar</div>
-      <div class="nav-item" data-view="viewAccum" onclick="showView('viewAccum');loadAccumulation()"><span class="ico">↑</span>Akum</div>
-      <div class="nav-item" data-view="viewDist" onclick="showView('viewDist');loadDistribution()"><span class="ico">↓</span>Dist</div>
-      <div class="nav-item" data-view="viewProfile" onclick="showView('viewProfile');loadMyWatch()"><span class="ico">◉</span>Profil</div>
+  <div class="bottom-nav-wrap fixed bottom-0 left-0 w-full hidden justify-center pb-[calc(12px+env(safe-area-inset-bottom))] z-[100]" id="bottomNav">
+    <div class="w-[94%] max-w-[430px] flex justify-around bg-[rgba(13,17,31,0.92)] backdrop-blur-[16px] border border-white/10 rounded-[26px] py-2 px-1">
+      <div class="w-[18%] flex flex-col items-center gap-[2px] text-[9px] font-bold text-gray-600 uppercase cursor-pointer nav-item active" data-view="viewHome" onclick="showView('viewHome')"><span class="text-[17px]">⌂</span>Home</div>
+      <div class="w-[18%] flex flex-col items-center gap-[2px] text-[9px] font-bold text-gray-600 uppercase cursor-pointer nav-item" data-view="viewRadar" onclick="showView('viewRadar');loadRadar()"><span class="text-[17px]">◎</span>Radar</div>
+      <div class="w-[18%] flex flex-col items-center gap-[2px] text-[9px] font-bold text-gray-600 uppercase cursor-pointer nav-item" data-view="viewAccum" onclick="showView('viewAccum');loadAccumulation()"><span class="text-[17px]">↑</span>Akum</div>
+      <div class="w-[18%] flex flex-col items-center gap-[2px] text-[9px] font-bold text-gray-600 uppercase cursor-pointer nav-item" data-view="viewDist" onclick="showView('viewDist');loadDistribution()"><span class="text-[17px]">↓</span>Dist</div>
+      <div class="w-[18%] flex flex-col items-center gap-[2px] text-[9px] font-bold text-gray-600 uppercase cursor-pointer nav-item" data-view="viewProfile" onclick="showView('viewProfile');loadMyWatch()"><span class="text-[17px]">◉</span>Profil</div>
     </div>
   </div>
 
@@ -580,17 +504,31 @@ function clearSession() {
 function switchAuth(mode) {
   authMode = mode;
   $("tabLogin").classList.toggle("active", mode === "login");
+  $("tabLogin").classList.toggle("bg-nexusCyan/10", mode === "login");
+  $("tabLogin").classList.toggle("text-nexusCyan", mode === "login");
+  $("tabLogin").classList.toggle("border-nexusCyan/25", mode === "login");
+  
   $("tabRegister").classList.toggle("active", mode === "register");
+  $("tabRegister").classList.toggle("bg-nexusCyan/10", mode === "register");
+  $("tabRegister").classList.toggle("text-nexusCyan", mode === "register");
+  $("tabRegister").classList.toggle("border-nexusCyan/25", mode === "register");
+  
   $("authBtn").textContent = mode === "login" ? "Masuk" : "Daftar Sekarang";
   $("inviteField").style.display = mode === "register" ? "block" : "none";
-  $("authMsg").className = "auth-msg";
-  $("authMsg").textContent = "";
+  
+  const msgEl = $("authMsg");
+  msgEl.className = "hidden text-xs p-2.5 rounded-[11px] mb-3 leading-relaxed";
+  msgEl.textContent = "";
 }
 
 function showAuthMsg(text, ok) {
   const el = $("authMsg");
   el.textContent = text;
-  el.className = "auth-msg " + (ok ? "ok" : "err");
+  if (ok) {
+    el.className = "block text-xs p-2.5 rounded-[11px] mb-3 leading-relaxed bg-nexusGreen/10 border border-nexusGreen/30 text-[#7dffen]";
+  } else {
+    el.className = "block text-xs p-2.5 rounded-[11px] mb-3 leading-relaxed bg-nexusRed/10 border border-nexusRed/30 text-[#ff8aa8]";
+  }
 }
 
 async function submitAuth() {
@@ -637,7 +575,8 @@ async function submitAuth() {
 function logout() {
   clearSession();
   $("appView").classList.remove("show");
-  $("bottomNav").classList.remove("show");
+  $("bottomNav").classList.remove("flex");
+  $("bottomNav").classList.add("hidden");
   $("authView").classList.add("show");
   switchAuth("login");
 }
@@ -645,7 +584,8 @@ function logout() {
 function enterApp() {
   $("authView").classList.remove("show");
   $("appView").classList.add("show");
-  $("bottomNav").classList.add("show");
+  $("bottomNav").classList.remove("hidden");
+  $("bottomNav").classList.add("flex");
   const u = session.username || "U";
   $("userAvatar").textContent = u.charAt(0).toUpperCase();
   $("userName").textContent = u;
@@ -653,16 +593,17 @@ function enterApp() {
   $("profUser").textContent = u;
   $("profRole").textContent = session.role || "USER";
   $("profQuota").textContent = session.quota ?? "-";
-  if (session.role === "ADMIN") {
+  
+  if (session.role === "ADMIN" && $("adminDeepWrap")) {
     $("adminDeepWrap").style.display = "block";
+  } else if ($("adminDeepWrap")) {
+    $("adminDeepWrap").style.display = "none";
   }
+  
   showView("viewHome");
   loadIHSG();
   loadSectorStrength();
   loadBandarPulse();
-  if (session.role === "ADMIN" && $("adminDeepWrap")) {
-    $("adminDeepWrap").style.display = "block";
-  }
 }
 
 function showView(id) {
@@ -670,39 +611,42 @@ function showView(id) {
   const el = $(id);
   if (el) el.classList.add("active");
   document.querySelectorAll(".nav-item").forEach(n => {
-    n.classList.toggle("active", n.getAttribute("data-view") === id);
+    const isActive = n.getAttribute("data-view") === id;
+    n.classList.toggle("active", isActive);
+    n.classList.toggle("text-nexusCyan", isActive);
+    n.classList.toggle("text-gray-600", !isActive);
   });
 }
 
 // ================== RADAR & DEEP SCAN ==================
 async function loadRadar() {
   const box = $("radarList");
-  box.innerHTML = '<div class="loading-inline">Memuat radar...</div>';
+  box.innerHTML = '<div class="text-xs text-muted">Memuat radar...</div>';
   try {
     const data = await api("radar", {}, 15000);
     if (!data.data || !data.data.length) {
-      box.innerHTML = '<div class="empty">Radar kosong. Tunggu EOD Scan atau jalankan dari backend.</div>';
+      box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Radar kosong. Tunggu EOD Scan atau jalankan dari backend.</div>';
       $("radarMeta").textContent = "";
       return;
     }
     box.innerHTML = data.data.map(d => `
       <div class="radar-card" onclick="analyzeTicker('${d.ticker}')">
-        <div class="radar-top">
-          <div class="ticker">${d.ticker}</div>
+        <div class="flex justify-between items-center mb-[7px]">
+          <div class="text-[15px] font-extrabold font-mono">${d.ticker}</div>
           <span class="badge badge-${d.grade || 'C'}">Grade ${d.grade || '-'}</span>
         </div>
-        <div class="setup-tag">${d.setup || '-'}</div>
-        <div class="meta">
-          <span>TQ <b>${d.tradeQuality ?? '-'}</b></span>
-          <span>RR <b>${d.rr ?? '-'}</b></span>
-          <span>RSI <b>${d.rsi ?? '-'}</b></span>
+        <div class="inline-block text-[10px] font-bold text-nexusPurple bg-nexusPurple/10 border border-nexusPurple/25 py-[3px] px-2 rounded-md mb-[7px]">${d.setup || '-'}</div>
+        <div class="flex gap-[11px] flex-wrap text-[11px] text-muted">
+          <span>TQ <b class="text-slate-200 font-mono">${d.tradeQuality ?? '-'}</b></span>
+          <span>RR <b class="text-slate-200 font-mono">${d.rr ?? '-'}</b></span>
+          <span>RSI <b class="text-slate-200 font-mono">${d.rsi ?? '-'}</b></span>
           <span>${d.sector || ''}</span>
         </div>
       </div>
     `).join("");
     $("radarMeta").textContent = data.updatedAt ? "Update: " + new Date(data.updatedAt).toLocaleString("id-ID") : "";
   } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat radar.</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Gagal memuat radar.</div>';
   }
 }
 
@@ -740,92 +684,98 @@ async function loadBandarPulse() {
     const acc = data.accumulation || [];
     const dist = data.distribution || [];
     if (!acc.length && !dist.length) {
-      box.innerHTML = '<div class="loading-inline">Belum ada data Deep Scan.</div>';
+      box.innerHTML = '<div class="text-xs text-muted">Belum ada data Deep Scan.</div>';
       return;
     }
     let html = "";
     if (acc.length) {
-      html += `<div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:6px;">Top Akumulasi</div>`;
+      html += `<div class="text-[11px] text-nexusGreen font-bold mb-1.5">Top Akumulasi</div>`;
       html += acc.map(d => `
         <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-          <div class="radar-top">
-            <div class="ticker">${d.ticker}</div>
+          <div class="flex justify-between items-center mb-[7px]">
+            <div class="text-[15px] font-extrabold font-mono">${d.ticker}</div>
             <span class="badge badge-${d.grade || 'B'}">${d.grade || '-'}</span>
           </div>
           <span class="bandar-tag acc">${d.bandarStatus || 'AKUMULASI'}</span>
-          <div class="meta"><span>TQ <b>${d.tradeQuality ?? '-'}</b></span><span>Net <b>${fmt(d.netBuyLot)}</b></span></div>
+          <div class="flex gap-[11px] flex-wrap text-[11px] text-muted">
+            <span>TQ <b class="text-slate-200 font-mono">${d.tradeQuality ?? '-'}</b></span>
+            <span>Net <b class="text-slate-200 font-mono">${fmt(d.netBuyLot)}</b></span>
+          </div>
         </div>
       `).join("");
     }
     if (dist.length) {
-      html += `<div style="font-size:11px;color:var(--red);font-weight:700;margin:10px 0 6px;">Top Distribusi</div>`;
+      html += `<div class="text-[11px] text-nexusRed font-bold mt-2.5 mb-1.5">Top Distribusi</div>`;
       html += dist.map(d => `
         <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-          <div class="radar-top">
-            <div class="ticker">${d.ticker}</div>
+          <div class="flex justify-between items-center mb-[7px]">
+            <div class="text-[15px] font-extrabold font-mono">${d.ticker}</div>
             <span class="badge badge-${d.grade || 'C'}">${d.grade || '-'}</span>
           </div>
           <span class="bandar-tag dist">${d.bandarStatus || 'DISTRIBUSI'}</span>
-          <div class="meta"><span>TQ <b>${d.tradeQuality ?? '-'}</b></span><span>Net <b>${fmt(d.netBuyLot)}</b></span></div>
+          <div class="flex gap-[11px] flex-wrap text-[11px] text-muted">
+            <span>TQ <b class="text-slate-200 font-mono">${d.tradeQuality ?? '-'}</b></span>
+            <span>Net <b class="text-slate-200 font-mono">${fmt(d.netBuyLot)}</b></span>
+          </div>
         </div>
       `).join("");
     }
     box.innerHTML = html;
   } catch {
-    box.innerHTML = '<div class="loading-inline">Gagal memuat Bandar Pulse.</div>';
+    box.innerHTML = '<div class="text-xs text-muted">Gagal memuat Bandar Pulse.</div>';
   }
 }
 
 // ================== BANDAR PAGES ==================
 async function loadAccumulation() {
   const box = $("accumList");
-  box.innerHTML = '<div class="loading-inline">Memuat...</div>';
+  box.innerHTML = '<div class="text-xs text-muted">Memuat...</div>';
   try {
     const data = await api("getAccumulation", {}, 12000);
     renderBandarList(box, data.data || [], "acc");
   } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Gagal memuat.</div>';
   }
 }
 
 async function loadDistribution() {
   const box = $("distList");
-  box.innerHTML = '<div class="loading-inline">Memuat...</div>';
+  box.innerHTML = '<div class="text-xs text-muted">Memuat...</div>';
   try {
     const data = await api("getDistribution", {}, 12000);
     renderBandarList(box, data.data || [], "dist");
   } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Gagal memuat.</div>';
   }
 }
 
 async function loadPremium() {
   const box = $("premiumList");
-  box.innerHTML = '<div class="loading-inline">Memuat...</div>';
+  box.innerHTML = '<div class="text-xs text-muted">Memuat...</div>';
   try {
     const data = await api("getPremiumWatchlist", {}, 12000);
     renderBandarList(box, data.data || [], "prem");
   } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Gagal memuat.</div>';
   }
 }
 
 function renderBandarList(box, list, type) {
   if (!list.length) {
-    box.innerHTML = '<div class="empty">Belum ada data. Jalankan Deep Scan (Admin).</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada data. Jalankan Deep Scan (Admin).</div>';
     return;
   }
   box.innerHTML = list.map(d => `
     <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-      <div class="radar-top">
-        <div class="ticker">${d.ticker}</div>
+      <div class="flex justify-between items-center mb-[7px]">
+        <div class="text-[15px] font-extrabold font-mono">${d.ticker}</div>
         <span class="badge badge-${d.grade || 'C'}">Grade ${d.grade || '-'}</span>
       </div>
-      <div class="setup-tag">${d.setup || '-'}</div>
+      <div class="inline-block text-[10px] font-bold text-nexusPurple bg-nexusPurple/10 border border-nexusPurple/25 py-[3px] px-2 rounded-md mb-[7px]">${d.setup || '-'}</div>
       <span class="bandar-tag ${type === 'dist' ? 'dist' : type === 'acc' ? 'acc' : 'unknown'}">${d.bandarStatus || '-'}</span>
-      <div class="meta">
-        <span>TQ <b>${d.tradeQuality ?? '-'}</b></span>
-        <span>RR <b>${d.plan?.rr1 ?? d.rr ?? '-'}</b></span>
+      <div class="flex gap-[11px] flex-wrap text-[11px] text-muted">
+        <span>TQ <b class="text-slate-200 font-mono">${d.tradeQuality ?? '-'}</b></span>
+        <span>RR <b class="text-slate-200 font-mono">${d.plan?.rr1 ?? d.rr ?? '-'}</b></span>
         <span>${d.sector || ''}</span>
       </div>
     </div>
@@ -942,9 +892,11 @@ function renderResult(data) {
   // Admin panel
   if (session && session.role === "ADMIN") {
     $("adminPanel").style.display = "grid";
+    $("adminPanel").classList.add("grid-cols-2");
     $("btnPremium").style.display = (data.dataSource || "").includes("GOAPI") ? "none" : "block";
   } else {
     $("adminPanel").style.display = "none";
+    $("adminPanel").classList.remove("grid-cols-2");
   }
 
   calcLot();
@@ -954,10 +906,16 @@ function renderResult(data) {
 // ================== POSITION SIZE ==================
 function setRisk(r, el) {
   currentRisk = r;
-  document.querySelectorAll(".risk-btn").forEach(b => b.classList.remove("active"));
-  if (el) el.classList.add("active");
+  document.querySelectorAll(".risk-btn").forEach(b => {
+    b.classList.remove("active");
+    b.classList.remove("bg-nexusYellow/10", "border-nexusYellow", "text-nexusYellow");
+  });
+  if (el) {
+    el.classList.add("active");
+    el.classList.add("bg-nexusYellow/10", "border-nexusYellow", "text-nexusYellow");
+  }
   calcLot();
-  loadTV(t.ticker || data.ticker);
+  loadTV(lastResult ? (lastResult.ticker || lastResult.data?.ticker) : null);
 }
 
 function calcLot() {
@@ -1005,24 +963,24 @@ async function loadMyWatch() {
     const data = await api("getMyWatchlist", {}, 12000);
     const list = data.data || [];
     if (!list.length) {
-      box.innerHTML = '<div class="empty">Belum ada setup yang dipantau.</div>';
+      box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Belum ada setup yang dipantau.</div>';
       return;
     }
     box.innerHTML = list.map(d => `
       <div class="bandar-card" onclick="analyzeTicker('${d.ticker}')">
-        <div class="radar-top">
-          <div class="ticker">${d.ticker}</div>
+        <div class="flex justify-between items-center mb-[7px]">
+          <div class="text-[15px] font-extrabold font-mono">${d.ticker}</div>
           <span class="badge badge-${d.grade || 'C'}">${d.grade || '-'}</span>
         </div>
-        <div class="setup-tag">${d.setup || '-'}</div>
-        <div class="meta">
-          <span>Entry <b>${fmt(d.entryLow)}-${fmt(d.entryHigh)}</b></span>
-          <span>SL <b>${fmt(d.sl)}</b></span>
+        <div class="inline-block text-[10px] font-bold text-nexusPurple bg-nexusPurple/10 border border-nexusPurple/25 py-[3px] px-2 rounded-md mb-[7px]">${d.setup || '-'}</div>
+        <div class="flex gap-[11px] flex-wrap text-[11px] text-muted">
+          <span>Entry <b class="text-slate-200 font-mono">${fmt(d.entryLow)}-${fmt(d.entryHigh)}</b></span>
+          <span>SL <b class="text-slate-200 font-mono">${fmt(d.sl)}</b></span>
         </div>
       </div>
     `).join("");
   } catch {
-    box.innerHTML = '<div class="empty">Gagal memuat.</div>';
+    box.innerHTML = '<div class="text-center text-muted text-[13px] py-[22px] px-2.5 leading-relaxed">Gagal memuat.</div>';
   }
 }
 
@@ -1033,11 +991,11 @@ async function sendChat() {
   if (!msg) return;
   if (!session || !session.token) { logout(); return; }
   const log = $("chatLog");
-  log.innerHTML += `<div class="bubble user">${msg.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</div>`;
+  log.innerHTML += `<div class="max-w-[88%] p-3 rounded-[13px] text-[13px] leading-relaxed whitespace-pre-wrap self-end bg-nexusCyan/10 border border-nexusCyan/20">${msg.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</div>`;
   input.value = "";
   log.scrollTop = log.scrollHeight;
   const pending = document.createElement("div");
-  pending.className = "bubble bot";
+  pending.className = "max-w-[88%] p-3 rounded-[13px] text-[13px] leading-relaxed whitespace-pre-wrap self-start bg-nexusPurple/10 border border-nexusPurple/20";
   pending.textContent = "Mengetik...";
   log.appendChild(pending);
   log.scrollTop = log.scrollHeight;
@@ -1063,7 +1021,7 @@ async function loadIHSG() {
     const ch = data.changePct;
     const chEl = $("ihsgChange");
     chEl.textContent = (ch > 0 ? "+" : "") + ch + "%";
-    chEl.style.color = ch > 0 ? "var(--green)" : ch < 0 ? "var(--red)" : "var(--muted)";
+    chEl.style.color = ch > 0 ? "var(--nexusGreen)" : ch < 0 ? "var(--nexusRed)" : "var(--muted)";
     $("ihsgRegime").textContent = data.regime || "-";
     $("ihsgAdx").textContent = data.adx ?? "-";
     $("ihsgRsi").textContent = data.rsi ?? "-";
@@ -1131,16 +1089,16 @@ async function loadSectorStrength() {
     const d = data.data || {};
     const keys = Object.keys(d);
     if (!keys.length) {
-      box.innerHTML = '<div class="loading-inline">Belum ada data sektor (jalankan EOD Scan).</div>';
+      box.innerHTML = '<div class="text-xs text-muted">Belum ada data sektor (jalankan EOD Scan).</div>';
       return;
     }
     const sorted = keys.map(k => ({ name: k, ...d[k] })).sort((a, b) => (b.strength || 0) - (a.strength || 0));
     box.innerHTML = sorted.map(s => {
-      const color = (s.strength || 0) >= 65 ? "var(--green)" : (s.strength || 0) >= 50 ? "var(--yellow)" : "var(--red)";
-      return `<div class="row"><span>${s.name}</span><b style="color:${color}">${s.strength ?? "-"}</b></div>`;
+      const color = (s.strength || 0) >= 65 ? "var(--nexusGreen)" : (s.strength || 0) >= 50 ? "var(--nexusYellow)" : "var(--nexusRed)";
+      return `<div class="flex justify-between py-2 border-b border-dashed border-white/5 text-xs"><span class="text-muted">${s.name}</span><b style="color:${color}">${s.strength ?? "-"}</b></div>`;
     }).join("");
   } catch {
-    box.innerHTML = '<div class="loading-inline">Gagal memuat sektor.</div>';
+    box.innerHTML = '<div class="text-xs text-muted">Gagal memuat sektor.</div>';
   }
 }
 
